@@ -5,15 +5,18 @@
 //  Created by Ege Sucu on 16.10.2021.
 //
 
-import Foundation
+import SwiftUI
 import HealthKit
+import CoreData
 
 class ActivityManager : ObservableObject{
     
+    @Published var items: [DashItem] = []
     @Published var steps = "No Steps"
-    @Published var waterAmount = "No Water taken."
-    @Published var exerciseMinutes = "No exercise recorded yet."
-    @Published var calorieAmount = "No calories has burned."
+    @Published var waterAmount = "0 ml"
+    @Published var exerciseMinutes = "0 minute"
+    @Published var calorieAmount = "0 kcal"
+    @Published var mealDetail = "N/A"
     let healthStore = HKHealthStore()
     
     final let waterType = HKQuantityType(HKQuantityTypeIdentifier.dietaryWater)
@@ -25,9 +28,45 @@ class ActivityManager : ObservableObject{
     static let shared = ActivityManager()
     
     init(){
+#if DEBUG
+        exerciseMinutes = "30 minutes"
+        waterAmount = "2.200 ml"
+        steps = "12.934"
+        mealDetail = "5 meals"
+        calorieAmount = "859 kcal"
+#endif
+        reloadItems()
         accessHealthData()
         if canAccessHealthStore{
             fetchData()
+        }
+        
+
+    }
+    
+    func reloadItems(){
+        items.removeAll()
+        items = [DashItem(title: "Exercise", detail: exerciseMinutes, type: .exercise, color: .green),
+                 DashItem(title: "Water", detail: waterAmount, type: .water, color: .blue),
+                 DashItem(title: "Steps", detail: steps, type: .steps, color: .orange),
+                 DashItem(title: "Meal", detail: mealDetail, type: .meals, color: .yellow),
+                 DashItem(title: "Calories", detail: calorieAmount, type: .calorie, color: .red)]
+    }
+    
+    func getMealCount(from results: FetchedResults<Meal>){
+        switch results.count{
+        case 0:
+            mealDetail = "No meal recorded."
+            break
+        case 1:
+            mealDetail = "1 meal"
+            break
+        case let x where x > 1:
+            mealDetail = "\(x) meals"
+            break
+        default:
+            mealDetail = "N/A"
+            break
         }
     }
     
@@ -40,17 +79,21 @@ class ActivityManager : ObservableObject{
     
     func getWaterAmount(){
         self.waterAmount = collectTodaysData(quantityType: waterType)
+        reloadItems()
     }
     
     func getExerciseData(){
         self.exerciseMinutes = collectTodaysData(quantityType: activityType)
+        reloadItems()
     }
     
     func getCalorieData(){
         self.calorieAmount = collectTodaysData(quantityType: caloriesType)
+        reloadItems()
     }
     func getSteps(){
         self.steps = collectTodaysData(quantityType: stepsType)
+        reloadItems()
     }
     
     func collectTodaysData(quantityType: HKQuantityType) -> String{
@@ -61,11 +104,11 @@ class ActivityManager : ObservableObject{
             let calendar = NSCalendar.current
             let now = Date()
             let components = calendar.dateComponents([.year, .month, .day], from: now)
-
+            
             guard let startDate = calendar.date(from: components) else {
                 fatalError("*** Unable to create the start date ***")
             }
-             
+            
             guard let endDate = calendar.date(byAdding: .day, value: 1, to: startDate) else {
                 fatalError("*** Unable to create the end date ***")
             }
@@ -137,5 +180,13 @@ class ActivityManager : ObservableObject{
                 self.canAccessHealthStore = true
             }
         }
+    }
+    
+    func saveMeal(context: NSManagedObjectContext) {
+        PersistenceController.save(context: context)
+    }
+    func deleteMeal(meal: Meal, at context: NSManagedObjectContext){
+        context.delete(meal)
+        saveMeal(context: context)
     }
 }

@@ -6,35 +6,48 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct DashboardView: View {
     
-    var columns : [GridItem] = [GridItem(.adaptive(minimum: 100, maximum: 200))]
+    @FetchRequest(entity: Meal.entity(),
+                  sortDescriptors: [],
+                  animation: .easeInOut)
+    var meals: FetchedResults<Meal>
     
-    var items : [DashItem] = [
-        DashItem(title: "Exercise", detail: "", type: .exercise, color: .green),
-        DashItem(title: "Water", detail: "", type: .water, color: .blue),
-        DashItem(title: "Steps", detail: "", type: .steps, color: .orange),
-        DashItem(title: "Meal", detail: "", type: .meals, color: .yellow)
+    let columns : [GridItem] = [
+        GridItem(.flexible(minimum: 100)),
+        GridItem(.flexible(minimum: 100))
     ]
+    
+    @StateObject var manager = ActivityManager.shared
     
     var body: some View {
         NavigationView{
-            LazyVGrid(columns: columns, spacing: 10) {
-                ForEach(items){ item in
-                    RoundedDashView(item: item)
+                LazyVGrid(columns: columns, spacing: 30) {
+                    ForEach(manager.items){ item in
+                        DashboardCell(item: item)
+                    }
                 }
-                
-            }
-            .padding()
+                .onAppear(perform: {
+                   refresh()
+                })
+                .padding([.leading,.trailing,.bottom])
             .navigationTitle(Text("Dashboard"))
+            
         }
+    }
+    
+    func refresh(){
+        manager.getMealCount(from: meals)
     }
 }
 
 struct DashboardView_Previews: PreviewProvider {
     static var previews: some View {
-        DashboardView()
+        let previewContext = PersistenceController.preview
+            .container.viewContext
+        return DashboardView().environment(\.managedObjectContext, previewContext)
     }
 }
 
@@ -57,5 +70,5 @@ struct DashItem: Identifiable {
 }
 
 enum DashType {
-    case water,exercise,meals,steps
+    case water,exercise,meals,steps,calorie
 }
