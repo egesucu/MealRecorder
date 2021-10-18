@@ -25,7 +25,7 @@ struct RootView: View {
                     Label("Meals", systemImage: "fork.knife")
                 }
             
-        }.accentColor(.black)
+        }.accentColor(Color(uiColor: .label))
     }
 }
 

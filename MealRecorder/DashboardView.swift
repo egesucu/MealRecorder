@@ -14,6 +14,7 @@ struct DashboardView: View {
                   sortDescriptors: [],
                   animation: .easeInOut)
     var meals: FetchedResults<Meal>
+    @Environment(\.managedObjectContext) var viewContext
     
     let columns : [GridItem] = [
         GridItem(.flexible(minimum: 100)),
@@ -24,21 +25,27 @@ struct DashboardView: View {
     
     var body: some View {
         NavigationView{
+            ScrollView {
                 LazyVGrid(columns: columns, spacing: 30) {
                     ForEach(manager.items){ item in
                         DashboardCell(item: item)
                     }
+                }.refreshable {
+                    self.refresh()
                 }
                 .onAppear(perform: {
-                   refresh()
+                    self.refresh()
                 })
                 .padding([.leading,.trailing,.bottom])
-            .navigationTitle(Text("Dashboard"))
+                .navigationTitle(Text("Dashboard"))
+            }
             
         }
     }
     
     func refresh(){
+        manager.accessHealthData()
+        manager.fetchData()
         manager.getMealCount(from: meals)
     }
 }

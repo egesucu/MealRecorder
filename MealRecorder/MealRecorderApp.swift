@@ -13,7 +13,7 @@ struct MealRecorderApp: App {
 
     var body: some Scene {
         WindowGroup {
-            DashboardView()
+            RootView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
