@@ -22,11 +22,11 @@ class ActivityManager : ObservableObject{
     final let waterType = HKQuantityType(HKQuantityTypeIdentifier.dietaryWater)
     final let stepsType = HKQuantityType(HKQuantityTypeIdentifier.stepCount)
     final let caloriesType = HKQuantityType(HKQuantityTypeIdentifier.activeEnergyBurned)
-    final let activityType = HKQuantityType(HKQuantityTypeIdentifier.appleExerciseTime)
+    final let exerciseType = HKQuantityType(HKQuantityTypeIdentifier.appleExerciseTime)
     var canAccessHealthStore = false
     
     init(){
-#if DEBUG
+#if targetEnvironment(simulator)
         exerciseMinutes = "30 minutes"
         waterAmount = "2.200 ml"
         steps = "12.934"

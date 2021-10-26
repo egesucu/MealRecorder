@@ -10,6 +10,12 @@ import CoreData
 
 struct DashboardView: View {
     
+    @FetchRequest(entity: Meal.entity(),
+                  sortDescriptors: [],
+                  animation: .easeInOut)
+    var meals: FetchedResults<Meal>
+    @Environment(\.managedObjectContext) var viewContext
+    
     let columns : [GridItem] = [
         GridItem(.flexible(minimum: 100)),
         GridItem(.flexible(minimum: 100))
@@ -37,7 +43,7 @@ struct DashboardView: View {
             }
             
         }.navigationViewStyle(.stack)
-=======
+        
                 }.refreshable {
                     self.refresh()
                 }
