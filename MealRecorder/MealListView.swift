@@ -15,7 +15,7 @@ struct MealListView: View {
     var meals: FetchedResults<Meal>
     @Environment(\.managedObjectContext) var context
     
-    @StateObject var manager = ActivityManager.shared
+    @StateObject var manager = ActivityManager()
     @State private var showAddMeal = false
     
     var body: some View{
@@ -23,7 +23,7 @@ struct MealListView: View {
             ShowView()
                 .toolbar(content: {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        EditButton().disabled(self.meals.count == 0)
+                        EditButton().disabled(meals.count == 0)
                         Button {
                             self.showAddMeal.toggle()
                         } label: {
@@ -59,7 +59,7 @@ struct MealListView: View {
                     }
                 }footer: {
                     if meals.count == 1 {
-                        Text("\(meals.count) Meal").bold()
+                        Text("1 Meal").bold()
                     } else {
                         Text("\(meals.count) Meals").bold()
                     }

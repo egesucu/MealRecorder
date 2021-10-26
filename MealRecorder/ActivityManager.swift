@@ -12,11 +12,11 @@ import CoreData
 class ActivityManager : ObservableObject{
     
     @Published var items: [DashItem] = []
-    @Published var steps = "No Steps"
-    @Published var waterAmount = "0 ml"
-    @Published var exerciseMinutes = "0 minute"
-    @Published var calorieAmount = "0 kcal"
-    @Published var mealDetail = "N/A"
+    var steps = "No Steps"
+    var waterAmount = "0 ml"
+    var exerciseMinutes = "0 minute"
+    var calorieAmount = "0 kcal"
+    var mealDetail = "N/A"
     let healthStore = HKHealthStore()
     
     final let waterType = HKQuantityType(HKQuantityTypeIdentifier.dietaryWater)
@@ -24,8 +24,6 @@ class ActivityManager : ObservableObject{
     final let caloriesType = HKQuantityType(HKQuantityTypeIdentifier.activeEnergyBurned)
     final let activityType = HKQuantityType(HKQuantityTypeIdentifier.appleExerciseTime)
     var canAccessHealthStore = false
-    
-    static let shared = ActivityManager()
     
     init(){
 #if DEBUG
@@ -38,10 +36,8 @@ class ActivityManager : ObservableObject{
         reloadItems()
         accessHealthData()
         if canAccessHealthStore{
-            fetchData()
+            fetchData(meals: nil)
         }
-        
-
     }
     
     func reloadItems(){
@@ -53,8 +49,8 @@ class ActivityManager : ObservableObject{
                  DashItem(title: "Calories", detail: calorieAmount, type: .calorie, color: .red)]
     }
     
-    func getMealCount(from results: FetchedResults<Meal>){
-        switch results.count{
+    func getMealCount(meals: FetchedResults<Meal>){
+        switch meals.count{
         case 0:
             mealDetail = "No meal recorded."
             break
@@ -70,30 +66,33 @@ class ActivityManager : ObservableObject{
         }
     }
     
-    func fetchData(){
+    func fetchData(meals: FetchedResults<Meal>?){
+        if let meals = meals {
+            getMealCount(meals: meals)
+        }
         getWaterAmount()
         getExerciseData()
         getCalorieData()
         getSteps()
+        
+        DispatchQueue.main.async {
+            self.objectWillChange.send()
+        }
     }
     
     func getWaterAmount(){
         self.waterAmount = collectTodaysData(quantityType: waterType)
-        reloadItems()
     }
     
     func getExerciseData(){
         self.exerciseMinutes = collectTodaysData(quantityType: activityType)
-        reloadItems()
     }
     
     func getCalorieData(){
         self.calorieAmount = collectTodaysData(quantityType: caloriesType)
-        reloadItems()
     }
     func getSteps(){
         self.steps = collectTodaysData(quantityType: stepsType)
-        reloadItems()
     }
     
     func collectTodaysData(quantityType: HKQuantityType) -> String{
@@ -101,21 +100,10 @@ class ActivityManager : ObservableObject{
         var collectedAmount = ""
         
         if canAccessHealthStore{
-            let calendar = NSCalendar.current
-            let now = Date()
-            let components = calendar.dateComponents([.year, .month, .day], from: now)
+            let begin = Calendar.current.startOfDay(for: Date.now)
+            let predicate = HKQuery.predicateForSamples(withStart: begin, end: nil, options: [.strictStartDate])
             
-            guard let startDate = calendar.date(from: components) else {
-                fatalError("*** Unable to create the start date ***")
-            }
-            
-            guard let endDate = calendar.date(byAdding: .day, value: 1, to: startDate) else {
-                fatalError("*** Unable to create the end date ***")
-            }
-            
-            let today = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
-            
-            let query = HKStatisticsQuery(quantityType: quantityType, quantitySamplePredicate: today, options: []) { _, statistics, error in
+            let query = HKStatisticsQuery(quantityType: quantityType, quantitySamplePredicate: predicate, options: [.cumulativeSum]) { _, statistics, error in
                 if let error = error{
                     print(error.localizedDescription)
                 } else if let stats = statistics {
@@ -154,11 +142,11 @@ class ActivityManager : ObservableObject{
                 if let error = error {
                     print(error.localizedDescription)
                 } else {
-                    self.fetchData()
+                    self.fetchData(meals: nil)
                 }
             }
         } else {
-            //We can't save water.
+            
         }
     }
     

@@ -10,36 +10,33 @@ import CoreData
 
 struct DashboardView: View {
     
-    @FetchRequest(entity: Meal.entity(),
-                  sortDescriptors: [],
-                  animation: .easeInOut)
-    var meals: FetchedResults<Meal>
-    
     let columns : [GridItem] = [
         GridItem(.flexible(minimum: 100)),
         GridItem(.flexible(minimum: 100))
     ]
-    
-    @StateObject var manager = ActivityManager.shared
+    @Environment(\.managedObjectContext) var viewContext
+    @FetchRequest(entity: Meal.entity(),
+                  sortDescriptors: [NSSortDescriptor(keyPath: \Meal.date, ascending: true)],
+                  animation: .easeInOut)
+    var meals: FetchedResults<Meal>
+    @StateObject var manager = ActivityManager()
     
     var body: some View {
         NavigationView{
+            ScrollView {
                 LazyVGrid(columns: columns, spacing: 30) {
-                    ForEach(manager.items){ item in
-                        DashboardCell(item: item)
+                        ForEach(manager.items){ item in
+                            DashboardCell(item: item)
+                        }
                     }
-                }
-                .onAppear(perform: {
-                   refresh()
-                })
-                .padding([.leading,.trailing,.bottom])
-            .navigationTitle(Text("Dashboard"))
+                    .onAppear(perform: {
+                        manager.fetchData(meals: meals)
+                    })
+                    .padding([.leading,.trailing,.bottom])
+                .navigationTitle(Text("Dashboard"))
+            }
             
-        }
-    }
-    
-    func refresh(){
-        manager.getMealCount(from: meals)
+        }.navigationViewStyle(.stack)
     }
 }
 
