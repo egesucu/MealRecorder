@@ -36,7 +36,6 @@ struct AddMealView: View {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button {
                             self.saveMeal()
-                            presentationMode.wrappedValue.dismiss()
                         } label: {
                             Text("Add")
                                 .foregroundColor(Color(uiColor: .systemGreen))
@@ -51,18 +50,23 @@ struct AddMealView: View {
     
     func saveMeal(){
         let meal = Meal(context: context)
+        meal.id = UUID()
         meal.name = name
         meal.location = location
         meal.date = date
-        PersistenceController.save(context: context)
+        do {
+            try context.save()
+            presentationMode.wrappedValue.dismiss()
+        } catch let error {
+            print(error.localizedDescription)
+        }
+       
     }
 }
 
 
 struct AddMealView_Previews: PreviewProvider {
     static var previews: some View {
-       
             AddMealView()
-        
     }
 }

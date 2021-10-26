@@ -37,6 +37,25 @@ struct DashboardView: View {
             }
             
         }.navigationViewStyle(.stack)
+=======
+                }.refreshable {
+                    self.refresh()
+                }
+                .onAppear(perform: {
+                    self.refresh()
+                })
+                .padding([.leading,.trailing,.bottom])
+                .navigationTitle(Text("Dashboard"))
+            }
+            
+        }
+    }
+    
+    func refresh(){
+        manager.accessHealthData()
+        manager.fetchData()
+        manager.getMealCount(from: meals)
+>>>>>>> main
     }
 }
 

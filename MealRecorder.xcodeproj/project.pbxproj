@@ -28,6 +28,7 @@
 		9D471C91271C751A002641E9 /* MealListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealListView.swift; sourceTree = "<group>"; };
 		9D471C93271C8054002641E9 /* MealCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealCell.swift; sourceTree = "<group>"; };
 		9D471C95271C8468002641E9 /* AddMealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMealView.swift; sourceTree = "<group>"; };
+		9D5F3860271DC4E7003A09B5 /* MealRecorder.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MealRecorder.entitlements; sourceTree = "<group>"; };
 		9DD8CD0A271AEFBD00FCF1ED /* MealRecorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MealRecorder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DD8CD0D271AEFBD00FCF1ED /* MealRecorderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealRecorderApp.swift; sourceTree = "<group>"; };
 		9DD8CD11271AEFBF00FCF1ED /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -71,6 +72,7 @@
 		9DD8CD0C271AEFBD00FCF1ED /* MealRecorder */ = {
 			isa = PBXGroup;
 			children = (
+				9D5F3860271DC4E7003A09B5 /* MealRecorder.entitlements */,
 				9DD8CD0D271AEFBD00FCF1ED /* MealRecorderApp.swift */,
 				9DD8CD20271AF99700FCF1ED /* DashboardView.swift */,
 				9D471C8F271C6F9D002641E9 /* RootView.swift */,

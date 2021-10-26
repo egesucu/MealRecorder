@@ -8,12 +8,11 @@
 import SwiftUI
 
 struct MealListView: View {
-    
+    @Environment(\.managedObjectContext) var context
     @FetchRequest(entity: Meal.entity(),
                   sortDescriptors: [NSSortDescriptor(keyPath: \Meal.date, ascending: true)],
                   animation: .easeInOut)
     var meals: FetchedResults<Meal>
-    @Environment(\.managedObjectContext) var context
     
     @StateObject var manager = ActivityManager()
     @State private var showAddMeal = false
@@ -37,6 +36,7 @@ struct MealListView: View {
                     //
                 } content: {
                     AddMealView()
+                        .environment(\.managedObjectContext,context)
                 }
             
         }.background(Color(uiColor: .systemGroupedBackground))
@@ -49,7 +49,6 @@ struct MealListView: View {
                 Text("No meal is added.").bold()
             }
         } else {
-            
             List {
                 Section {
                     ForEach(meals) { meal in
