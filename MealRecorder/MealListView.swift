@@ -71,7 +71,7 @@ struct MealListView: View {
     func deleteMeal(at offsets: IndexSet){
         for index in offsets{
             let item = meals[index]
-            manager.deleteMeal(meal: item, at: context)
+            //$manager.deleteMeal(meal: item, at: context)
         }
     }
 }
