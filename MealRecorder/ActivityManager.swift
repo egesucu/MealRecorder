@@ -37,7 +37,7 @@ class ActivityManager : ObservableObject{
 #if targetEnvironment(simulator)
         exerciseMinutes = "30 minutes"
         waterAmount = "2.200 ml"
-        steps = "12.934"
+        steps = "12.934 steps"
         mealDetail = "5 meals"
         calorieAmount = "859 kcal"
 #endif
