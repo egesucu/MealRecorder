@@ -20,11 +20,6 @@ struct DashboardView: View {
         GridItem(.flexible(minimum: 100)),
         GridItem(.flexible(minimum: 100))
     ]
-    @Environment(\.managedObjectContext) var viewContext
-    @FetchRequest(entity: Meal.entity(),
-                  sortDescriptors: [NSSortDescriptor(keyPath: \Meal.date, ascending: true)],
-                  animation: .easeInOut)
-    var meals: FetchedResults<Meal>
     @StateObject var manager = ActivityManager()
     
     var body: some View {
@@ -36,33 +31,18 @@ struct DashboardView: View {
                         }
                     }
                     .onAppear(perform: {
+                        manager.loadData()
                         manager.fetchData(meals: meals)
                     })
                     .padding([.leading,.trailing,.bottom])
                 .navigationTitle(Text("Dashboard"))
             }
             
-        }.navigationViewStyle(.stack)
-        
-                }.refreshable {
-                    self.refresh()
-                }
-                .onAppear(perform: {
-                    self.refresh()
-                })
-                .padding([.leading,.trailing,.bottom])
-                .navigationTitle(Text("Dashboard"))
-            }
-            
         }
+        .navigationViewStyle(.stack)
+        
     }
-    
-    func refresh(){
-        manager.accessHealthData()
-        manager.fetchData()
-        manager.getMealCount(from: meals)
->>>>>>> main
-    }
+
 }
 
 struct DashboardView_Previews: PreviewProvider {

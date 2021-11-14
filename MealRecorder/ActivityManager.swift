@@ -24,8 +24,16 @@ class ActivityManager : ObservableObject{
     final let caloriesType = HKQuantityType(HKQuantityTypeIdentifier.activeEnergyBurned)
     final let exerciseType = HKQuantityType(HKQuantityTypeIdentifier.appleExerciseTime)
     var canAccessHealthStore = false
+    let components : DateComponents = {
+        let calendar = NSCalendar.current
+        let now = Date()
+        let components = calendar.dateComponents([.year, .month, .day], from: now)
+        return components
+    }()
+    let midnight = Calendar.current.startOfDay(for: .now) // 12:00 AM of today.
     
     init(){
+        accessHealthData()
 #if targetEnvironment(simulator)
         exerciseMinutes = "30 minutes"
         waterAmount = "2.200 ml"
@@ -33,39 +41,33 @@ class ActivityManager : ObservableObject{
         mealDetail = "5 meals"
         calorieAmount = "859 kcal"
 #endif
+        loadData()
         reloadItems()
-        accessHealthData()
-        if canAccessHealthStore{
-            fetchData()
-        }
-
     }
     
-    func fetchData(){
-            getWaterAmount()
-            getExerciseData()
-            getCalorieData()
-            getSteps()
+    func loadData(){
+        accessHealthData()
+        if canAccessHealthStore{
+            self.collectWater()
+            self.collectSteps()
+            self.collectCalories()
+            self.collectExerciseMinutes()
+        } else {
+            print("Can't reach health data")
+        }
     }
-//    FIXME: Won't load on initial load, loads after 
     
     func reloadItems(){
         items.removeAll()
-        items = [DashItem(title: "Exercise", detail: "\(String(describing: exerciseMinutes))", type: .exercise, color: .green),
-                 DashItem(title: "Water", detail: "\(String(describing: waterAmount))", type: .water, color: .blue),
-                 DashItem(title: "Steps", detail: "\(String(describing: steps).replacingOccurrences(of: "count", with: ""))", type: .steps, color: .orange),
+        items = [DashItem(title: "Exercise", detail: exerciseMinutes, type: .exercise, color: .green),
+                 DashItem(title: "Water", detail: waterAmount, type: .water, color: .blue),
+                 DashItem(title: "Steps", detail: steps, type: .steps, color: .orange),
                  DashItem(title: "Meal", detail: mealDetail, type: .meals, color: .yellow),
-                 DashItem(title: "Calories", detail: "\(String(describing: calorieAmount))", type: .calorie, color: .red)]
-        
+                 DashItem(title: "Calories", detail: calorieAmount, type: .calorie, color: .red)]
     }
     
-
-    func getMealCount(meals: FetchedResults<Meal>){
-        switch meals.count{
-
     func getMealCount(from results: FetchedResults<Meal>) {
         switch results.count{
-
         case 0:
             mealDetail = "No meal."
             break
@@ -81,116 +83,87 @@ class ActivityManager : ObservableObject{
         }
     }
     
-
     func fetchData(meals: FetchedResults<Meal>?){
         if let meals = meals {
-            getMealCount(meals: meals)
+            getMealCount(from: meals)
         }
-        getWaterAmount()
-        getExerciseData()
-        getCalorieData()
-        getSteps()
         
         DispatchQueue.main.async {
             self.objectWillChange.send()
         }
     }
     
-    func getWaterAmount(){
-        self.waterAmount = collectTodaysData(quantityType: waterType)
-    }
-    
-    func getExerciseData(){
-        self.exerciseMinutes = collectTodaysData(quantityType: activityType)
-    }
-    
-    func getCalorieData(){
-        self.calorieAmount = collectTodaysData(quantityType: caloriesType)
-    }
-    func getSteps(){
-        self.steps = collectTodaysData(quantityType: stepsType
-    
-    func getWaterAmount(){
-        collectTodaysData(quantityType: waterType)
-    }
-    
-    func getExerciseData(){
-        collectTodaysData(quantityType: exerciseType)
-    }
-    
-    func getCalorieData(){
-        collectTodaysData(quantityType: caloriesType)
-    }
-    func getSteps(){
-        collectTodaysData(quantityType: stepsType)
-
-    }
-    
-    func collectTodaysData(quantityType: HKQuantityType){
-        
-        let calendar = NSCalendar.current
-        let now = Date()
-        let components = calendar.dateComponents([.year, .month, .day], from: now)
-        
-
-        if canAccessHealthStore{
-            let begin = Calendar.current.startOfDay(for: Date.now)
-            let predicate = HKQuery.predicateForSamples(withStart: begin, end: nil, options: [.strictStartDate])
-            
-            let query = HKStatisticsQuery(quantityType: quantityType, quantitySamplePredicate: predicate, options: [.cumulativeSum]) { _, statistics, error in
-
-        guard let startDate = calendar.date(from: components) else {
-            return
+    func collectWater(){
+        let predicate = HKQuery.predicateForSamples(withStart: midnight, end: nil, options: [.strictStartDate])
+        let query = HKStatisticsQuery(quantityType: waterType, quantitySamplePredicate: predicate, options: [.cumulativeSum]) { query, statistics, error in
+            if let error = error {
+                print(error)
+            } else {
+                guard let statistics = statistics else { return }
+                
+                let amount = statistics.sumQuantity()
+                DispatchQueue.main.async {
+                    self.waterAmount = (String(describing: amount))
+                }
+            }
         }
-        
-        guard let endDate = calendar.date(byAdding: .day, value: 1, to: startDate) else {
-            return
-        }
-        
-        let today = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
-        
-        if canAccessHealthStore {
-            
-            let query = HKStatisticsQuery(quantityType: quantityType, quantitySamplePredicate: today, options: .cumulativeSum) { _, statistics, error in
-                if let error = error{
-                    print(error.localizedDescription)
-                } else if let stats = statistics {
-                    let amount = stats.sumQuantity()
-                    if let amount = amount {
-                        switch quantityType {
-                        case self.waterType:
-                            DispatchQueue.main.async {
-                                self.waterAmount = amount
-                            }
-                        case self.stepsType:
-                            DispatchQueue.main.async {
-                                self.steps = amount
-                            }
-                        case self.caloriesType:
-                            DispatchQueue.main.async {
-                                self.calorieAmount = amount
-                            }
-                        case self.exerciseType:
-                            DispatchQueue.main.async {
-                                self.exerciseMinutes = amount
-                            }
-                        default:
-                            break
-                        }
-                        print("amount:",amount)
+        self.healthStore.execute(query)
+    }
+    
+    func collectSteps(){
+        let predicate = HKQuery.predicateForSamples(withStart: midnight, end: nil, options: [.strictStartDate])
+        let query = HKStatisticsQuery(quantityType: stepsType, quantitySamplePredicate: predicate, options: [.cumulativeSum]) { query, statistics, error in
+            if let error = error {
+                print(error)
+            } else {
+                guard let statistics = statistics else { return }
+                let amount = statistics.sumQuantity()
+                if let amount = amount {
+                    DispatchQueue.main.async {
+                        let intAmount = Int(amount.doubleValue(for: .count()))
+                        self.steps = String(localized: "\(intAmount) steps")
                     }
                 }
             }
-            healthStore.execute(query)
-            
-        } else {
-            accessHealthData()
-            if !canAccessHealthStore{
-                print("Your data can't be loaded because of permission.")
+        }
+        self.healthStore.execute(query)
+    }
+    
+    func collectCalories(){
+        let predicate = HKQuery.predicateForSamples(withStart: midnight, end: nil, options: [.strictStartDate])
+        let query = HKStatisticsQuery(quantityType: caloriesType, quantitySamplePredicate: predicate, options: [.cumulativeSum]) { query, statistics, error in
+            if let error = error {
+                print(error)
+            } else {
+                guard let statistics = statistics else { return }
+                let amount = statistics.sumQuantity()
+                if let amount = amount {
+                    DispatchQueue.main.async {
+                        let intAmount = Int(amount.doubleValue(for: .count()))
+                        self.steps = String(localized: "\(intAmount) steps")
+                    }
+                }
             }
         }
-        
-        self.reloadItems()
+        self.healthStore.execute(query)
+    }
+    
+    func collectExerciseMinutes(){
+        let predicate = HKQuery.predicateForSamples(withStart: midnight, end: nil, options: [.strictStartDate])
+        let query = HKStatisticsQuery(quantityType: exerciseType, quantitySamplePredicate: predicate, options: [.cumulativeSum]) { query, statistics, error in
+            if let error = error {
+                print(error)
+            } else {
+                guard let statistics = statistics else { return }
+                let amount = statistics.sumQuantity()
+                if let amount = amount {
+                    DispatchQueue.main.async {
+                        self.steps = "\(amount)"
+                    }
+                }
+            }
+        }
+        self.healthStore.execute(query)
     }
     
     func saveWater(amount: Double){
@@ -214,10 +187,6 @@ class ActivityManager : ObservableObject{
     func couldSaveWater() -> Bool {
         return healthStore
             .authorizationStatus(for: HKQuantityType(HKQuantityTypeIdentifier.dietaryWater)) == .sharingAuthorized
-    }
-    
-    func couldAccessHealthStore() -> Bool {
-        return HKHealthStore.isHealthDataAvailable()
     }
     
     func accessHealthData(){
