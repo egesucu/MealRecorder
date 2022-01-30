@@ -10,46 +10,58 @@ import CoreData
 
 struct DashboardView: View {
     
-    @FetchRequest(entity: Meal.entity(),
-                  sortDescriptors: [],
-                  animation: .easeInOut)
+    @FetchRequest(entity: Meal.entity(),sortDescriptors: [])
     var meals: FetchedResults<Meal>
     @Environment(\.managedObjectContext) var viewContext
-    
-    let columns : [GridItem] = [
+    let columns = [
         GridItem(.flexible(minimum: 100)),
         GridItem(.flexible(minimum: 100))
     ]
-    @StateObject var manager = ActivityManager()
+    @StateObject var manager = HealthStore()
     
     var body: some View {
         NavigationView{
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 30) {
-                        ForEach(manager.items){ item in
-                            DashboardCell(item: item)
-                        }
+                    ForEach(manager.items){ item in
+                        DashboardCell(item: item)
                     }
-                    .onAppear(perform: {
-                        manager.loadData()
-                        manager.fetchData(meals: meals)
-                    })
-                    .padding([.leading,.trailing,.bottom])
+                }
+                .padding([.leading,.trailing,.bottom])
                 .navigationTitle(Text("Dashboard"))
             }
-            
+            .toolbar(content: {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        reloadData()
+                    } label: {
+                        Image(systemName: "gobackward")
+                            .font(.title2)
+                    }
+
+                }
+            })
         }
+        .onAppear(perform: reloadData)
+        .onChange(of: manager.waterValue, perform: { _ in
+            reloadData()
+        })
         .navigationViewStyle(.stack)
         
     }
-
+    
+    func reloadData(){
+        manager.meals = meals
+        manager.loadData()
+    }
 }
 
 struct DashboardView_Previews: PreviewProvider {
     static var previews: some View {
         let previewContext = PersistenceController.preview
             .container.viewContext
-        return DashboardView().environment(\.managedObjectContext, previewContext)
+        return DashboardView()
+            .environment(\.managedObjectContext, previewContext)
     }
 }
 

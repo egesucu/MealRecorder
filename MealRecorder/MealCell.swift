@@ -28,7 +28,14 @@ struct MealCell: View {
                 }
             }.padding(5)
             Spacer()
-            Text((meal.date ?? Date()).formatted(.dateTime.hour().minute()))
+            if Calendar.current.isDateInToday((meal.date ?? .now)){
+                Text((meal.date ?? Date()).formatted(.dateTime.hour().minute()))
+            } else {
+                VStack{
+                    Text((meal.date ?? Date()).formatted(.dateTime.day().month(.wide)))
+                    Text((meal.date ?? Date()).formatted(.dateTime.hour().minute()))
+                }
+            }
             
         }
         

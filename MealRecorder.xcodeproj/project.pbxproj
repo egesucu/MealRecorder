@@ -18,7 +18,7 @@
 		9DD8CD17271AEFBF00FCF1ED /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DD8CD16271AEFBF00FCF1ED /* Persistence.swift */; };
 		9DD8CD1A271AEFBF00FCF1ED /* MealRecorder.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9DD8CD18271AEFBF00FCF1ED /* MealRecorder.xcdatamodeld */; };
 		9DD8CD21271AF99700FCF1ED /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DD8CD20271AF99700FCF1ED /* DashboardView.swift */; };
-		9DD8CD23271AFEC000FCF1ED /* ActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DD8CD22271AFEC000FCF1ED /* ActivityManager.swift */; };
+		9DD8CD23271AFEC000FCF1ED /* HealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DD8CD22271AFEC000FCF1ED /* HealthStore.swift */; };
 		9DD8CD27271B06C700FCF1ED /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DD8CD26271B06C700FCF1ED /* HealthKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +28,7 @@
 		9D471C91271C751A002641E9 /* MealListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealListView.swift; sourceTree = "<group>"; };
 		9D471C93271C8054002641E9 /* MealCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealCell.swift; sourceTree = "<group>"; };
 		9D471C95271C8468002641E9 /* AddMealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMealView.swift; sourceTree = "<group>"; };
+		9DB4114127A6EDD700E2DB60 /* MealRecorder.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MealRecorder.entitlements; sourceTree = "<group>"; };
 		9DD8CD0A271AEFBD00FCF1ED /* MealRecorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MealRecorder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DD8CD0D271AEFBD00FCF1ED /* MealRecorderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealRecorderApp.swift; sourceTree = "<group>"; };
 		9DD8CD11271AEFBF00FCF1ED /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -35,7 +36,7 @@
 		9DD8CD16271AEFBF00FCF1ED /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		9DD8CD19271AEFBF00FCF1ED /* MealRecorder.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MealRecorder.xcdatamodel; sourceTree = "<group>"; };
 		9DD8CD20271AF99700FCF1ED /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
-		9DD8CD22271AFEC000FCF1ED /* ActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityManager.swift; sourceTree = "<group>"; };
+		9DD8CD22271AFEC000FCF1ED /* HealthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthStore.swift; sourceTree = "<group>"; };
 		9DD8CD26271B06C700FCF1ED /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -71,13 +72,14 @@
 		9DD8CD0C271AEFBD00FCF1ED /* MealRecorder */ = {
 			isa = PBXGroup;
 			children = (
+				9DB4114127A6EDD700E2DB60 /* MealRecorder.entitlements */,
 				9DD8CD0D271AEFBD00FCF1ED /* MealRecorderApp.swift */,
 				9DD8CD20271AF99700FCF1ED /* DashboardView.swift */,
 				9D471C8F271C6F9D002641E9 /* RootView.swift */,
 				9D471C91271C751A002641E9 /* MealListView.swift */,
 				9D471C95271C8468002641E9 /* AddMealView.swift */,
 				9D471C93271C8054002641E9 /* MealCell.swift */,
-				9DD8CD22271AFEC000FCF1ED /* ActivityManager.swift */,
+				9DD8CD22271AFEC000FCF1ED /* HealthStore.swift */,
 				9D471C8B271C4D1F002641E9 /* DashboardCell.swift */,
 				9DD8CD11271AEFBF00FCF1ED /* Assets.xcassets */,
 				9DD8CD16271AEFBF00FCF1ED /* Persistence.swift */,
@@ -174,7 +176,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9DD8CD17271AEFBF00FCF1ED /* Persistence.swift in Sources */,
-				9DD8CD23271AFEC000FCF1ED /* ActivityManager.swift in Sources */,
+				9DD8CD23271AFEC000FCF1ED /* HealthStore.swift in Sources */,
 				9DD8CD21271AF99700FCF1ED /* DashboardView.swift in Sources */,
 				9D471C94271C8054002641E9 /* MealCell.swift in Sources */,
 				9DD8CD1A271AEFBF00FCF1ED /* MealRecorder.xcdatamodeld in Sources */,
@@ -310,6 +312,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MealRecorder/MealRecorder.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -346,6 +349,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MealRecorder/MealRecorder.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;

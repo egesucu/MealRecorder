@@ -8,38 +8,52 @@
 import SwiftUI
 
 struct MealListView: View {
+    
     @Environment(\.managedObjectContext) var context
     @FetchRequest(entity: Meal.entity(),
                   sortDescriptors: [NSSortDescriptor(keyPath: \Meal.date, ascending: true)],
                   animation: .easeInOut)
     var meals: FetchedResults<Meal>
     
-    @StateObject var manager = ActivityManager()
+    @StateObject var manager = HealthStore()
     @State private var showAddMeal = false
+    @State private var previousMeals = [Meal]()
+    @State private var currentMeals = [Meal]()
     
     var body: some View{
         NavigationView{
-            ShowView()
-                .toolbar(content: {
-                    ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        EditButton().disabled(meals.count == 0)
-                        Button {
-                            self.showAddMeal.toggle()
-                        } label: {
-                            Label("Add", systemImage: "plus")
-                                .font(.title3)
-                        }.buttonStyle(.bordered)
-                    }
-                })
-                .navigationTitle(Text("Meals"))
-                .sheet(isPresented: $showAddMeal) {
-                    //
-                } content: {
-                    AddMealView()
-                        .environment(\.managedObjectContext,context)
+            ZStack(alignment: .bottomTrailing) {
+                ShowView()
+                    .toolbar(content: {
+                        ToolbarItemGroup(placement: .navigationBarTrailing) {
+                            EditButton()
+                                .disabled(meals.count == 0)
+                        }
+                    })
+                    .navigationTitle(Text("Meals"))
+                    
+                Button {
+                    self.showAddMeal.toggle()
+                } label: {
+                    Label("Add", systemImage: "plus")
+                        .font(.largeTitle)
+                        .labelStyle(.iconOnly)
                 }
+                .buttonStyle(.bordered)
+                .clipShape(Circle())
+                .shadow(color: Color(uiColor: .systemOrange), radius: 8, x: 4, y: 4)
+                .sheet(isPresented: $showAddMeal, onDismiss: {
+                        filterMeals()
+                    }, content: {
+                        AddMealView()
+                            .environment(\.managedObjectContext,context)
+                })
+                .offset(x: -15, y: -15)
+            }
             
-        }.background(Color(uiColor: .systemGroupedBackground))
+        }
+        .navigationViewStyle(.stack)
+        .onAppear(perform: filterMeals)
     }
     
     @ViewBuilder
@@ -51,27 +65,44 @@ struct MealListView: View {
         } else {
             List {
                 Section {
-                    ForEach(meals) { meal in
+                    ForEach(previousMeals) { meal in
                         MealCell(meal: meal)
                     }.onDelete { index in
-                        self.deleteMeal(at: index)
+                        self.deleteMeal(mealList: previousMeals, at: index)
                     }
-                }footer: {
-                    if meals.count == 1 {
-                        Text("1 Meal").bold()
-                    } else {
-                        Text("\(meals.count) Meals").bold()
+                } header: {
+                    Text("Previous Meals")
+                }
+                Section{
+                    ForEach(currentMeals) { meal in
+                        MealCell(meal: meal)
+                    }.onDelete { index in
+                        self.deleteMeal(mealList: currentMeals, at: index)
                     }
-                    
+                } header: {
+                    Text("Today")
                 }
             }
+            .listStyle(.insetGrouped)
         }
     }
     
-    func deleteMeal(at offsets: IndexSet){
+    func filterMeals(){
+        let todayBegin = Calendar.current.startOfDay(for: .now)
+        previousMeals = meals.filter({ meal in
+            return (meal.date ?? .now) < todayBegin
+        })
+        currentMeals = meals.filter({ meal in
+            return Calendar.current.isDateInToday((meal.date ?? .now))
+        })
+    }
+    
+    func deleteMeal(mealList: [Meal], at offsets: IndexSet){
         for index in offsets{
-            let item = meals[index]
-            //$manager.deleteMeal(meal: item, at: context)
+            let item = mealList[index]
+            context.delete(item)
+            PersistenceController.save(context: context)
+            filterMeals()
         }
     }
 }

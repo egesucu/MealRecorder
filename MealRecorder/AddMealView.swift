@@ -22,7 +22,7 @@ struct AddMealView: View {
                 TextField("Meal Name", text: $name, prompt: Text("Meal Name"))
                     .disableAutocorrection(true)
                 TextField("Meal Location",text: $location, prompt: Text("Meal Location"))
-                DatePicker("Date", selection: $date,displayedComponents: .hourAndMinute)
+                DatePicker("Date", selection: $date)
             }
             .toolbar(content: {
                 
