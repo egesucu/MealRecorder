@@ -11,34 +11,47 @@ struct MealCell: View {
     var meal: Meal
     
     var body: some View{
-        HStack{
+        ZStack(alignment: .center) {
+            RoundedRectangle(cornerRadius: 10)
+                .fill(Color(uiColor: .systemGroupedBackground))
+                .shadow(radius: 4)
             VStack(alignment: .leading) {
-                Label {
-                    Text(meal.name ?? "")
-                } icon: {
-                    Image(systemName: "fork.knife")
-                        .foregroundColor(Color(uiColor: .systemOrange))
+                HStack{
+                    Image(uiImage: (UIImage(data: meal.image ?? Data()) ?? UIImage(named: "AppIcon")) ?? UIImage())
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100 ,height: 100)
+                        .cornerRadius(10)
+                        .padding([.leading,.trailing],2)
+                    
+                    VStack(alignment: .leading) {
+                        Text("Meals")
+                            .font(.title)
+                            .bold()
+                            .padding(.bottom, 4)
+                        ForEach(meal.items ?? [""], id: \.self) { item in
+                            HStack{
+                                Label {
+                                    Text(item)
+                                } icon: {
+                                    Image(systemName: "largecircle.fill.circle")
+                                        .foregroundColor(.accentColor)
+                                }
+                            }
+                            
+                        }
+                    }
+                    Spacer()
                 }
-                Spacer(minLength: 20)
-                Label {
-                    Text(meal.location ?? "")
-                } icon: {
-                    Image(systemName: "map.fill")
-                        .foregroundColor(Color(uiColor: .label))
+                HStack{
+                    Text("Date")
+                        .font(.title3)
+                        .bold()
+                    Spacer()
+                    Text(meal.date?.formatted() ?? "")
                 }
-            }.padding(5)
-            Spacer()
-            if Calendar.current.isDateInToday((meal.date ?? .now)){
-                Text((meal.date ?? Date()).formatted(.dateTime.hour().minute()))
-            } else {
-                VStack{
-                    Text((meal.date ?? Date()).formatted(.dateTime.day().month(.wide)))
-                    Text((meal.date ?? Date()).formatted(.dateTime.hour().minute()))
-                }
-            }
-            
+            }.padding(.all)
         }
-        
     }
 }
 
@@ -46,22 +59,16 @@ struct MealCell_Previews: PreviewProvider {
     static var previews: some View {
         
         let meal = Meal(context: PersistenceController.preview.container.viewContext)
-        meal.name = "Cake"
+        meal.items = ["Cake","Burger"]
         meal.location = "AVM"
         meal.date = Date.now
         
         return Group{
             MealCell(meal: meal)
-                .preferredColorScheme(.dark)
-                .frame(width: .infinity, height: 80, alignment: .center)
-                .padding()
-                .previewLayout(.sizeThatFits)
-            MealCell(meal: meal)
-                .preferredColorScheme(.light)
                 .frame(width: .infinity, height: 80, alignment: .center)
                 .padding()
                 .previewLayout(.sizeThatFits)
         }
-            
+        
     }
 }

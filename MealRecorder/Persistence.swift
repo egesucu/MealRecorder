@@ -17,14 +17,14 @@ struct PersistenceController {
             let demoMeal = Meal(context: viewContext)
             demoMeal.id = UUID()
             demoMeal.location = "AVM"
-            demoMeal.name = "Cake"
+            demoMeal.items = ["Burger"]
             demoMeal.date = Date()
         }
         for _ in 0..<5 {
             let demoMeal = Meal(context: viewContext)
             demoMeal.id = UUID()
             demoMeal.location = "Ev"
-            demoMeal.name = "Pasta"
+            demoMeal.items = ["Burger"]
             demoMeal.date = Date().addingTimeInterval(24*60*6)
         }
         

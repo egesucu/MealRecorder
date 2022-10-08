@@ -51,7 +51,7 @@ struct AddMealView: View {
     func saveMeal(){
         let meal = Meal(context: context)
         meal.id = UUID()
-        meal.name = name
+        meal.items = ["Burger"]
         meal.location = location
         meal.date = date
         do {

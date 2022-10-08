@@ -41,7 +41,6 @@ struct MealListView: View {
                 .clipShape(Circle())
                 .shadow(color: Color(uiColor: .systemOrange), radius: 8, x: 4, y: 4)
                 .sheet(isPresented: $showAddMeal, onDismiss: {
-                        filterMeals()
                     }, content: {
                         AddMealView()
                             .environment(\.managedObjectContext,context)
@@ -51,7 +50,6 @@ struct MealListView: View {
             
         }
         .navigationViewStyle(.stack)
-        .onAppear(perform: filterMeals)
     }
     
     @ViewBuilder
@@ -62,20 +60,11 @@ struct MealListView: View {
             }
         } else {
             List {
-                Section {
-                    ForEach(previousMeals) { meal in
-                        MealCell(meal: meal)
-                    }.onDelete { index in
-                        self.deleteMeal(mealList: previousMeals, at: index)
-                    }
-                } header: {
-                    Text("Previous Meals")
-                }
                 Section{
-                    ForEach(currentMeals) { meal in
+                    ForEach(meals) { meal in
                         MealCell(meal: meal)
                     }.onDelete { index in
-                        self.deleteMeal(mealList: currentMeals, at: index)
+                        self.deleteMeal(mealList: meals as? [Meal] ?? [], at: index)
                     }
                 } header: {
                     Text("Today")
@@ -85,22 +74,13 @@ struct MealListView: View {
         }
     }
     
-    func filterMeals(){
-        let todayBegin = Calendar.current.startOfDay(for: .now)
-        previousMeals = meals.filter({ meal in
-            return (meal.date ?? .now) < todayBegin
-        })
-        currentMeals = meals.filter({ meal in
-            return Calendar.current.isDateInToday((meal.date ?? .now))
-        })
-    }
+
     
     func deleteMeal(mealList: [Meal], at offsets: IndexSet){
         for index in offsets{
             let item = mealList[index]
             context.delete(item)
             PersistenceController.save(context: context)
-            filterMeals()
         }
     }
 }
