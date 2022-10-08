@@ -17,12 +17,27 @@ struct MealCell: View {
                 .shadow(radius: 4)
             VStack(alignment: .leading) {
                 HStack{
-                    Image(uiImage: (UIImage(data: meal.image ?? Data()) ?? UIImage(named: "AppIcon")) ?? UIImage())
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 100 ,height: 100)
-                        .cornerRadius(10)
-                        .padding([.leading,.trailing],2)
+                    if let data = meal.image,
+                    let image = UIImage(data: data){
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 100 ,height: 100)
+                            .cornerRadius(10)
+                            .padding([.leading,.trailing],2)
+                    } else {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(Color(uiColor: .systemGroupedBackground))
+                                .frame(width: 100 ,height: 100)
+                                .shadow(radius: 4)
+                            Image("no-meal-photo")
+                                .resizable()
+                                .scaledToFit()
+                                .padding(.all)
+                                
+                        }.padding([.leading,.trailing],2)
+                    }
                     
                     VStack(alignment: .leading) {
                         Text("Meals")
@@ -38,7 +53,6 @@ struct MealCell: View {
                                         .foregroundColor(.accentColor)
                                 }
                             }
-                            
                         }
                     }
                     Spacer()

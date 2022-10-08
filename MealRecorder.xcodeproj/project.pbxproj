@@ -10,6 +10,8 @@
 		9D471C92271C751A002641E9 /* MealListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D471C91271C751A002641E9 /* MealListView.swift */; };
 		9D471C94271C8054002641E9 /* MealCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D471C93271C8054002641E9 /* MealCell.swift */; };
 		9D471C96271C8468002641E9 /* AddMealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D471C95271C8468002641E9 /* AddMealView.swift */; };
+		9D88309528F1D6D300320F98 /* CreditsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D88309428F1D6D300320F98 /* CreditsView.swift */; };
+		9D88309728F1D8A200320F98 /* DateUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D88309628F1D8A200320F98 /* DateUtility.swift */; };
 		9DB47A6828F198830011201F /* AlertKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9DB47A6728F198830011201F /* AlertKit */; };
 		9DD8CD0E271AEFBD00FCF1ED /* MealRecorderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DD8CD0D271AEFBD00FCF1ED /* MealRecorderApp.swift */; };
 		9DD8CD12271AEFBF00FCF1ED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DD8CD11271AEFBF00FCF1ED /* Assets.xcassets */; };
@@ -23,6 +25,8 @@
 		9D471C91271C751A002641E9 /* MealListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealListView.swift; sourceTree = "<group>"; };
 		9D471C93271C8054002641E9 /* MealCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealCell.swift; sourceTree = "<group>"; };
 		9D471C95271C8468002641E9 /* AddMealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMealView.swift; sourceTree = "<group>"; };
+		9D88309428F1D6D300320F98 /* CreditsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsView.swift; sourceTree = "<group>"; };
+		9D88309628F1D8A200320F98 /* DateUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtility.swift; sourceTree = "<group>"; };
 		9DB4114127A6EDD700E2DB60 /* MealRecorder.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MealRecorder.entitlements; sourceTree = "<group>"; };
 		9DD8CD0A271AEFBD00FCF1ED /* MealRecorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MealRecorder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DD8CD0D271AEFBD00FCF1ED /* MealRecorderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealRecorderApp.swift; sourceTree = "<group>"; };
@@ -71,6 +75,8 @@
 				9D471C91271C751A002641E9 /* MealListView.swift */,
 				9D471C95271C8468002641E9 /* AddMealView.swift */,
 				9D471C93271C8054002641E9 /* MealCell.swift */,
+				9D88309428F1D6D300320F98 /* CreditsView.swift */,
+				9D88309628F1D8A200320F98 /* DateUtility.swift */,
 				9DD8CD11271AEFBF00FCF1ED /* Assets.xcassets */,
 				9DD8CD16271AEFBF00FCF1ED /* Persistence.swift */,
 				9DD8CD18271AEFBF00FCF1ED /* MealRecorder.xcdatamodeld */,
@@ -172,10 +178,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				9DD8CD17271AEFBF00FCF1ED /* Persistence.swift in Sources */,
+				9D88309528F1D6D300320F98 /* CreditsView.swift in Sources */,
 				9D471C94271C8054002641E9 /* MealCell.swift in Sources */,
 				9DD8CD1A271AEFBF00FCF1ED /* MealRecorder.xcdatamodeld in Sources */,
 				9D471C92271C751A002641E9 /* MealListView.swift in Sources */,
 				9DD8CD0E271AEFBD00FCF1ED /* MealRecorderApp.swift in Sources */,
+				9D88309728F1D8A200320F98 /* DateUtility.swift in Sources */,
 				9D471C96271C8468002641E9 /* AddMealView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
