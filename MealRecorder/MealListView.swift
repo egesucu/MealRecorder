@@ -11,14 +11,12 @@ struct MealListView: View {
     
     @Environment(\.managedObjectContext) var context
     @FetchRequest(entity: Meal.entity(),
-                  sortDescriptors: [NSSortDescriptor(keyPath: \Meal.date, ascending: true)],
+                  sortDescriptors: [
+                    NSSortDescriptor(keyPath: \Meal.date, ascending: true)],
                   animation: .easeInOut)
     var meals: FetchedResults<Meal>
     
-    @StateObject var manager = HealthStore()
     @State private var showAddMeal = false
-    @State private var previousMeals = [Meal]()
-    @State private var currentMeals = [Meal]()
     
     var body: some View{
         NavigationView{
