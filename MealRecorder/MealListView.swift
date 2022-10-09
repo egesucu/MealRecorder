@@ -20,33 +20,28 @@ struct MealListView: View {
     
     var body: some View{
         NavigationView{
-            ZStack(alignment: .bottomTrailing) {
+            VStack{
                 ShowView()
                     .toolbar(content: {
                         ToolbarItemGroup(placement: .navigationBarTrailing) {
                             EditButton()
                                 .disabled(meals.count == 0)
+                            
+                            Button {
+                                self.showAddMeal.toggle()
+                            } label: {
+                                Label("Add Meal", systemImage: showAddMeal ? "plus.circle.fill" : "plus.circle")
+                            }
+
                         }
                     })
                     .navigationTitle(Text("Meals"))
-                    
-                Button {
-                    self.showAddMeal.toggle()
-                } label: {
-                    Label("Add", systemImage: "plus")
-                        .font(.largeTitle)
-                        .labelStyle(.iconOnly)
-                }
-                .buttonStyle(.bordered)
-                .clipShape(Circle())
-                .shadow(color: Color(uiColor: .systemOrange), radius: 8, x: 4, y: 4)
-                .sheet(isPresented: $showAddMeal, onDismiss: {
-                    }, content: {
-                        AddMealView()
-                            .environment(\.managedObjectContext,context)
-                })
-                .offset(x: -15, y: -15)
             }
+            .sheet(isPresented: $showAddMeal, onDismiss: {
+                }, content: {
+                    AddMealView()
+                        .environment(\.managedObjectContext,context)
+            })
             
         }
         .navigationViewStyle(.stack)
@@ -63,23 +58,22 @@ struct MealListView: View {
                 Section{
                     ForEach(meals) { meal in
                         MealCell(meal: meal)
-                    }.onDelete { index in
-                        self.deleteMeal(mealList: meals as? [Meal] ?? [], at: index)
                     }
+                    .onDelete(perform: deleteMeal)
                 } header: {
                     Text("Today")
                 }
+                .listRowBackground(Color.clear)
             }
+            
             .listStyle(.insetGrouped)
         }
     }
     
 
-    
-    func deleteMeal(mealList: [Meal], at offsets: IndexSet){
-        for index in offsets{
-            let item = mealList[index]
-            context.delete(item)
+    func deleteMeal(at offsets: IndexSet){
+        for offset in offsets{
+            context.delete(meals[offset])
             PersistenceController.save(context: context)
         }
     }

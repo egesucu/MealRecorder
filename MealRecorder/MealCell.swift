@@ -29,14 +29,16 @@ struct MealCell: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 8)
                                 .fill(Color(uiColor: .systemGroupedBackground))
-                                .frame(width: 100 ,height: 100)
                                 .shadow(radius: 4)
                             Image("no-meal-photo")
                                 .resizable()
                                 .scaledToFit()
                                 .padding(.all)
                                 
-                        }.padding([.leading,.trailing],2)
+                        }
+                        .frame(width: 100 ,height: 100)
+                        .padding([.leading,.trailing],2)
+                        
                     }
                     
                     VStack(alignment: .leading) {
