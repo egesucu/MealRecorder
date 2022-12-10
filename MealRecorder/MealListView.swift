@@ -19,6 +19,7 @@ struct MealListView: View {
     @State private var showAddMeal = false
     @State private var selection = Set<Meal>()
     @State private var isEditMode: EditMode = .inactive
+    @State private var showMoreItems = false
     
     var body: some View{
         NavigationView{
@@ -62,7 +63,7 @@ struct MealListView: View {
         } else {
             List(selection: $selection) {
                 Section{
-                    ForEach(meals) { meal in
+                    ForEach(meals.filter({ $0.date ?? .now >= Calendar.current.startOfDay(for: .now) })) { meal in
                         MealCell(meal: meal)
                             .padding(.bottom,10)
                     }
@@ -70,6 +71,31 @@ struct MealListView: View {
                     
                 } header: {
                     Text("Today")
+                }
+                .listRowBackground(Color.clear)
+                .listRowSeparatorTint(.clear)
+                Section{
+                    ForEach(showMoreItems ?  meals.filter({ $0.date ?? .now < Calendar.current.startOfDay(for: .now) }) : Array(meals.filter({ $0.date ?? .now < Calendar.current.startOfDay(for: .now) }).prefix(3)) ) { meal in
+                        MealCell(meal: meal)
+                            .padding(.bottom,10)
+                    }
+                    .onDelete(perform: deleteMeal)
+                    
+                } header: {
+                    Text("Previous")
+                } footer: {
+                    if meals.filter({ $0.date ?? .now < Calendar.current.startOfDay(for: .now) }).count > 3{
+                        Button {
+                            showMoreItems.toggle()
+                        } label: {
+                            HStack{
+                                Text(showMoreItems ? "Show Less" : "Show More").animation(.easeInOut)
+                                Image(systemName: showMoreItems ? "chevron.up.circle.fill" : "chevron.down.circle.fill").animation(.easeInOut)
+                            }
+                            
+                        }
+
+                    }
                 }
                 .listRowBackground(Color.clear)
                 .listRowSeparatorTint(.clear)
