@@ -14,6 +14,7 @@
 		9D88309528F1D6D300320F98 /* CreditsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D88309428F1D6D300320F98 /* CreditsView.swift */; };
 		9D88309728F1D8A200320F98 /* DateUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D88309628F1D8A200320F98 /* DateUtility.swift */; };
 		9DB47A6828F198830011201F /* AlertKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9DB47A6728F198830011201F /* AlertKit */; };
+		9DD7039F293B8EDF00F766DB /* SearchLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DD7039E293B8EDF00F766DB /* SearchLocationView.swift */; };
 		9DD8CD0E271AEFBD00FCF1ED /* MealRecorderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DD8CD0D271AEFBD00FCF1ED /* MealRecorderApp.swift */; };
 		9DD8CD12271AEFBF00FCF1ED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DD8CD11271AEFBF00FCF1ED /* Assets.xcassets */; };
 		9DD8CD15271AEFBF00FCF1ED /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DD8CD14271AEFBF00FCF1ED /* Preview Assets.xcassets */; };
@@ -30,6 +31,7 @@
 		9D88309428F1D6D300320F98 /* CreditsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsView.swift; sourceTree = "<group>"; };
 		9D88309628F1D8A200320F98 /* DateUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtility.swift; sourceTree = "<group>"; };
 		9DB4114127A6EDD700E2DB60 /* MealRecorder.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MealRecorder.entitlements; sourceTree = "<group>"; };
+		9DD7039E293B8EDF00F766DB /* SearchLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchLocationView.swift; sourceTree = "<group>"; };
 		9DD8CD0A271AEFBD00FCF1ED /* MealRecorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MealRecorder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DD8CD0D271AEFBD00FCF1ED /* MealRecorderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealRecorderApp.swift; sourceTree = "<group>"; };
 		9DD8CD11271AEFBF00FCF1ED /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -76,6 +78,7 @@
 				9DD8CD0D271AEFBD00FCF1ED /* MealRecorderApp.swift */,
 				9D471C91271C751A002641E9 /* MealListView.swift */,
 				9D471C95271C8468002641E9 /* AddMealView.swift */,
+				9DD7039E293B8EDF00F766DB /* SearchLocationView.swift */,
 				9D3C653F28F329A000930F84 /* ImagePicker.swift */,
 				9D471C93271C8054002641E9 /* MealCell.swift */,
 				9D88309428F1D6D300320F98 /* CreditsView.swift */,
@@ -181,6 +184,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9DD8CD17271AEFBF00FCF1ED /* Persistence.swift in Sources */,
+				9DD7039F293B8EDF00F766DB /* SearchLocationView.swift in Sources */,
 				9D88309528F1D6D300320F98 /* CreditsView.swift in Sources */,
 				9D471C94271C8054002641E9 /* MealCell.swift in Sources */,
 				9D3C654028F329A000930F84 /* ImagePicker.swift in Sources */,
@@ -325,6 +329,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need your camera to take a food photo";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to tell you the distance between found location and yours.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need to access here to select a photo";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -362,6 +367,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need your camera to take a food photo";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to tell you the distance between found location and yours.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need to access here to select a photo";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

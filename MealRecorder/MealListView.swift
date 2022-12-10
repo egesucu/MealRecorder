@@ -12,11 +12,13 @@ struct MealListView: View {
     @Environment(\.managedObjectContext) var context
     @FetchRequest(entity: Meal.entity(),
                   sortDescriptors: [
-                    NSSortDescriptor(keyPath: \Meal.date, ascending: true)],
+                    NSSortDescriptor(keyPath: \Meal.date, ascending: false)],
                   animation: .easeInOut)
     var meals: FetchedResults<Meal>
     
     @State private var showAddMeal = false
+    @State private var selection = Set<Meal>()
+    @State private var isEditMode: EditMode = .inactive
     
     var body: some View{
         NavigationView{
@@ -44,6 +46,10 @@ struct MealListView: View {
             })
             
         }
+        .onAppear(perform: {
+            print(meals)
+            context.refreshAllObjects()
+        })
         .navigationViewStyle(.stack)
     }
     
@@ -54,16 +60,19 @@ struct MealListView: View {
                 Text("No meal is added.").bold()
             }
         } else {
-            List {
+            List(selection: $selection) {
                 Section{
                     ForEach(meals) { meal in
                         MealCell(meal: meal)
+                            .padding(.bottom,10)
                     }
                     .onDelete(perform: deleteMeal)
+                    
                 } header: {
                     Text("Today")
                 }
                 .listRowBackground(Color.clear)
+                .listRowSeparatorTint(.clear)
             }
             
             .listStyle(.insetGrouped)

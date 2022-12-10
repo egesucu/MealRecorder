@@ -17,6 +17,13 @@ struct AddMealView: View {
     
     @State private var location = ""
     @State private var date = Date()
+    @State private var photoNeed = false
+    @State private var shouldShowCamera = false
+    @State private var sourceSelection : CameraSourceType = .camera
+    @State private var selectedPhoto : UIImage?
+    @State private var selectedImage: PhotosPickerItem?
+    @State private var selectedImageData: Data? = nil
+    @State private var selectedLocation: MapItem? = .init(item: .init())
     
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.managedObjectContext) var context
@@ -24,13 +31,9 @@ struct AddMealView: View {
     @StateObject var customAlertManager = CustomAlertManager()
     @State private var meals: [String] = []
     @State private var customAlertText: String = ""
+    @State private var shouldShowLocationSheet = false
     
-    @State private var photoNeed = false
-    @State private var shouldShowCamera = false
-    @State private var sourceSelection : CameraSourceType = .camera
-    @State private var selectedPhoto : UIImage?
-    @State private var selectedImage: PhotosPickerItem?
-    @State private var selectedImageData: Data? = nil
+
 
     
     var body: some View{
@@ -60,7 +63,15 @@ struct AddMealView: View {
 
                 }
                 Section {
-                    TextField("Meal Location",text: $location, prompt: Text("Meal Location"))
+                    HStack {
+                        Button {
+                            shouldShowLocationSheet.toggle()
+                        } label: {
+                            Image(systemName: "mappin.circle.fill")
+                        }
+
+                        TextField("Meal Location",text: $location, prompt: Text("Meal Location"))
+                    }
                     DatePicker("Date", selection: $date)
                 } header: {
                     Text("Details")
@@ -91,6 +102,13 @@ struct AddMealView: View {
                     }
                 }
             }
+            .sheet(isPresented: $shouldShowLocationSheet, onDismiss: {
+                if let selectedLocation{
+                    location = selectedLocation.item.placemark.name ?? ""
+                }
+            }, content: {
+                SearchLocationView(selectedLocation: $selectedLocation)
+            })
             .sheet(isPresented: self.$shouldShowCamera) {
                 ImagePickerView(selectedImage: $selectedPhoto, sourceType: .camera)
                     .ignoresSafeArea()
@@ -140,6 +158,10 @@ struct AddMealView: View {
             })
         .navigationTitle(Text("Add Meal"))
         }
+    }
+    
+    func showSearchLocationSheet(){
+        shouldShowLocationSheet.toggle()
     }
     
     @ViewBuilder
@@ -204,14 +226,24 @@ struct AddMealView: View {
         let meal = Meal(context: context)
         meal.id = UUID()
         meal.items = meals
-        meal.location = location
         meal.date = date
-        do {
-            try context.save()
-            presentationMode.wrappedValue.dismiss()
-        } catch let error {
-            print(error.localizedDescription)
+        if let selectedLocation{
+            let location = Location(context: context)
+            location.name = selectedLocation.item.placemark.name ?? ""
+            location.latitude = selectedLocation.item.placemark.coordinate.latitude
+            location.longitude = selectedLocation.item.placemark.coordinate.longitude
+            meal.selectedLocation = location
+            
+        } else if !location.isEmpty{
+            meal.location = location
         }
+        if let selectedImageData{
+            meal.image = selectedImageData
+        } else if let selectedPhoto{
+            meal.image = selectedPhoto.jpegData(compressionQuality: 0.8)
+        }
+        PersistenceController.save(context: context)
+        presentationMode.wrappedValue.dismiss()
        
     }
 }
