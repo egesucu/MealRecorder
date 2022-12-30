@@ -6,6 +6,7 @@
 //
 
 import CoreData
+import UIKit
 
 struct PersistenceController {
     static let shared = PersistenceController()
@@ -14,18 +15,28 @@ struct PersistenceController {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
         for _ in 0..<5 {
-            let demoMeal = Meal(context: viewContext)
-            demoMeal.id = UUID()
-            demoMeal.location = "AVM"
-            demoMeal.items = ["Burger"]
-            demoMeal.date = Date()
+            let meal = Meal(context: viewContext)
+            meal.id = UUID()
+            meal.items = ["Cake","Burger"]
+            meal.date = Date.now
+            meal.image = UIImage(named: "no-meal-photo")?.jpegData(compressionQuality: 0.8)
+            let demoLocation = Location(context: viewContext)
+            demoLocation.name = "Starbucks"
+            demoLocation.latitude = 41.032464900467325
+            demoLocation.longitude = 28.964352429812604
+            meal.selectedLocation = demoLocation
         }
         for _ in 0..<5 {
-            let demoMeal = Meal(context: viewContext)
-            demoMeal.id = UUID()
-            demoMeal.location = "Ev"
-            demoMeal.items = ["Burger"]
-            demoMeal.date = Date().addingTimeInterval(24*60*6)
+            let meal = Meal(context: viewContext)
+            meal.id = UUID()
+            meal.items = ["Cake","Burger"]
+            meal.image = UIImage(named: "no-meal-photo")?.jpegData(compressionQuality: 0.8)
+            let demoLocation = Location(context: viewContext)
+            demoLocation.name = "Starbucks"
+            demoLocation.latitude = 41.032464900467325
+            demoLocation.longitude = 28.964352429812604
+            meal.selectedLocation = demoLocation
+            meal.date = Date().addingTimeInterval(24*60*6)
         }
         
         save(context: viewContext)

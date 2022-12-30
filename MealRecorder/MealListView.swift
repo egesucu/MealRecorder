@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+enum MealFilter: String, CaseIterable{
+    case all = "All"
+    case thisWeek = "Weekly"
+    case thisMonth = "Monthly"
+}
+
 struct MealListView: View {
     
     @Environment(\.managedObjectContext) var context
@@ -15,29 +21,38 @@ struct MealListView: View {
                     NSSortDescriptor(keyPath: \Meal.date, ascending: false)],
                   animation: .easeInOut)
     var meals: FetchedResults<Meal>
+    @State private var filteredMeals : [Meal] = []
     
     @State private var showAddMeal = false
     @State private var selection = Set<Meal>()
     @State private var isEditMode: EditMode = .inactive
     @State private var showMoreItems = false
+    @State private var filter : MealFilter = .all
     
     var body: some View{
         NavigationView{
             VStack{
                 ShowView()
-                    .toolbar(content: {
-                        ToolbarItemGroup(placement: .navigationBarTrailing) {
-                            EditButton()
-                                .disabled(meals.count == 0)
-                            
-                            Button {
-                                self.showAddMeal.toggle()
-                            } label: {
-                                Label("Add Meal", systemImage: showAddMeal ? "plus.circle.fill" : "plus.circle")
+                    .toolbar {
+                        Menu(content: {
+                            Picker("Destination", selection: $filter) {
+                                ForEach(MealFilter.allCases, id: \.self) {
+                                    Text($0.rawValue)
+                                }
                             }
-
+                        }, label: {
+                            Text(filter.rawValue).bold()
+                            
+                        })
+                        EditButton()
+                            .disabled(meals.count == 0)
+                        
+                        Button {
+                            self.showAddMeal.toggle()
+                        } label: {
+                            Label("Add Meal", systemImage: showAddMeal ? "plus.circle.fill" : "plus.circle")
                         }
-                    })
+                    }
                     .navigationTitle(Text("Meals"))
             }
             .sheet(isPresented: $showAddMeal, onDismiss: {
@@ -50,6 +65,10 @@ struct MealListView: View {
         .onAppear(perform: {
             print(meals)
             context.refreshAllObjects()
+            filterMeals()
+        })
+        .onChange(of: filter, perform: { _ in
+            filterMeals()
         })
         .navigationViewStyle(.stack)
     }
@@ -62,46 +81,33 @@ struct MealListView: View {
             }
         } else {
             List(selection: $selection) {
-                Section{
-                    ForEach(meals.filter({ $0.date ?? .now >= Calendar.current.startOfDay(for: .now) })) { meal in
-                        MealCell(meal: meal)
-                            .padding(.bottom,10)
-                    }
-                    .onDelete(perform: deleteMeal)
-                    
-                } header: {
-                    Text("Today")
+                ForEach(filteredMeals) { meal in
+                    MealCell(meal: meal)
+                        .padding(.bottom,10)
                 }
-                .listRowBackground(Color.clear)
-                .listRowSeparatorTint(.clear)
-                Section{
-                    ForEach(showMoreItems ?  meals.filter({ $0.date ?? .now < Calendar.current.startOfDay(for: .now) }) : Array(meals.filter({ $0.date ?? .now < Calendar.current.startOfDay(for: .now) }).prefix(3)) ) { meal in
-                        MealCell(meal: meal)
-                            .padding(.bottom,10)
-                    }
-                    .onDelete(perform: deleteMeal)
-                    
-                } header: {
-                    Text("Previous")
-                } footer: {
-                    if meals.filter({ $0.date ?? .now < Calendar.current.startOfDay(for: .now) }).count > 3{
-                        Button {
-                            showMoreItems.toggle()
-                        } label: {
-                            HStack{
-                                Text(showMoreItems ? "Show Less" : "Show More").animation(.easeInOut)
-                                Image(systemName: showMoreItems ? "chevron.up.circle.fill" : "chevron.down.circle.fill").animation(.easeInOut)
-                            }
-                            
-                        }
-
-                    }
-                }
+                .onDelete(perform: deleteMeal)
                 .listRowBackground(Color.clear)
                 .listRowSeparatorTint(.clear)
             }
             
             .listStyle(.insetGrouped)
+        }
+    }
+    
+    func filterMeals(){
+        
+        switch filter {
+        case .all:
+            filteredMeals = meals
+                .sorted(by: { $0.date ?? .now > $1.date ?? .now })
+        case .thisWeek:
+            filteredMeals = meals
+                .filter({ $0.date ?? .now >= Calendar.current.startOfDay(for: .now).addingTimeInterval(60 * 60 * 24 * 7 * -1) })
+                .sorted(by: { $0.date ?? .now > $1.date ?? .now })
+        case .thisMonth:
+            filteredMeals = meals
+                .filter({ $0.date ?? .now >= Calendar.current.startOfDay(for: .now).addingTimeInterval(60 * 60 * 24 * 30 * -1) })
+                .sorted(by: { $0.date ?? .now > $1.date ?? .now })
         }
     }
     
