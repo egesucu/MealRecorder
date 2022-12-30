@@ -44,6 +44,7 @@ struct MealListView: View {
                             Text(filter.rawValue).bold()
                             
                         })
+                        .disabled(meals.count == 0)
                         EditButton()
                             .disabled(meals.count == 0)
                         
@@ -88,7 +89,10 @@ struct MealListView: View {
                 .onDelete(perform: deleteMeal)
                 .listRowBackground(Color.clear)
                 .listRowSeparatorTint(.clear)
-            }
+            }.refreshable(action: {
+                context.refreshAllObjects()
+                filterMeals()
+            })
             
             .listStyle(.insetGrouped)
         }
@@ -116,6 +120,7 @@ struct MealListView: View {
         for offset in offsets{
             context.delete(meals[offset])
             PersistenceController.save(context: context)
+            filterMeals()
         }
     }
 }
