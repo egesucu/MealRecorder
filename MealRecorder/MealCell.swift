@@ -23,7 +23,7 @@ struct MealCell: View {
             VStack(alignment: .center) {
                 HStack{
                     if let location = meal.selectedLocation{
-                        Map(coordinateRegion: .constant(MKCoordinateRegion(center: .init(latitude: location.latitude, longitude: location.longitude), span: .init(latitudeDelta: 0.0005, longitudeDelta: 0.0005))), annotationItems: [location], annotationContent: { item in
+                        Map(coordinateRegion: .constant(MKCoordinateRegion(center: .init(latitude: location.latitude, longitude: location.longitude), span: .init(latitudeDelta: 0.0005, longitudeDelta: 0.0005))), interactionModes: [], annotationItems: [location], annotationContent: { item in
                             MapMarker(coordinate: .init(latitude: location.latitude, longitude: location.longitude))
                         })
                         
