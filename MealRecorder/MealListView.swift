@@ -9,6 +9,7 @@ import SwiftUI
 
 enum MealFilter: String, CaseIterable{
     case all = "All"
+    case today = "Today"
     case thisWeek = "Weekly"
     case thisMonth = "Monthly"
 }
@@ -28,6 +29,8 @@ struct MealListView: View {
     @State private var isEditMode: EditMode = .inactive
     @State private var showMoreItems = false
     @State private var filter : MealFilter = .all
+    
+    let mealDataManager = MealDataManager.shared
     
     var body: some View{
         NavigationView{
@@ -58,13 +61,12 @@ struct MealListView: View {
             }
             .sheet(isPresented: $showAddMeal, onDismiss: {
                 }, content: {
-                    AddMealView()
+                    AddMealView(mealDataManager: mealDataManager)
                         .environment(\.managedObjectContext,context)
             })
             
         }
         .onAppear(perform: {
-            print(meals)
             context.refreshAllObjects()
             filterMeals()
         })
@@ -76,7 +78,7 @@ struct MealListView: View {
     
     @ViewBuilder
     func ShowView() -> some View {
-        if meals.count == 0 {
+        if filteredMeals.count == 0 {
             VStack {
                 Text("No meal is added.").bold()
             }
@@ -89,39 +91,24 @@ struct MealListView: View {
                 .onDelete(perform: deleteMeal)
                 .listRowBackground(Color.clear)
                 .listRowSeparatorTint(.clear)
-            }.refreshable(action: {
+            }
+            .listStyle(.insetGrouped)
+            .refreshable {
                 context.refreshAllObjects()
                 filterMeals()
-            })
+            }
             
-            .listStyle(.insetGrouped)
         }
     }
     
     func filterMeals(){
-        
-        switch filter {
-        case .all:
-            filteredMeals = meals
-                .sorted(by: { $0.date ?? .now > $1.date ?? .now })
-        case .thisWeek:
-            filteredMeals = meals
-                .filter({ $0.date ?? .now >= Calendar.current.startOfDay(for: .now).addingTimeInterval(60 * 60 * 24 * 7 * -1) })
-                .sorted(by: { $0.date ?? .now > $1.date ?? .now })
-        case .thisMonth:
-            filteredMeals = meals
-                .filter({ $0.date ?? .now >= Calendar.current.startOfDay(for: .now).addingTimeInterval(60 * 60 * 24 * 30 * -1) })
-                .sorted(by: { $0.date ?? .now > $1.date ?? .now })
-        }
+        filteredMeals = mealDataManager.filterMeals(meals: meals, filter: filter)
     }
     
 
     func deleteMeal(at offsets: IndexSet){
-        for offset in offsets{
-            context.delete(meals[offset])
-            PersistenceController.save(context: context)
-            filterMeals()
-        }
+        mealDataManager.deleteMeal(context: context, meals: filteredMeals, at: offsets)
+        filterMeals()
     }
 }
 

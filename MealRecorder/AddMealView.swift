@@ -33,22 +33,15 @@ struct AddMealView: View {
     @State private var customAlertText: String = ""
     @State private var shouldShowLocationSheet = false
     
+    var mealDataManager: MealDataManager
 
-
-    
     var body: some View{
         
         NavigationView {
             Form{
                 if !meals.isEmpty{
                     Section {
-                        List {
-                            ForEach(meals, id: \.self) { item in
-                                Text(item)
-                                    .lineLimit(2)
-                                    .minimumScaleFactor(0.4)
-                            }.onDelete(perform: deleteMeal)
-                        }
+                        MealItemListView(meals: $meals)
                     } header: {
                         Text("Meals")
                     }
@@ -63,21 +56,10 @@ struct AddMealView: View {
 
                 }
                 Section {
-                    HStack {
-                        Button {
-                            shouldShowLocationSheet.toggle()
-                        } label: {
-                            Image(systemName: "mappin.circle.fill")
-                        }
-
-                        TextField("Meal Location",text: $location, prompt: Text("Meal Location"))
-                    }
-                    DatePicker("Date", selection: $date)
+                    LocationView(shouldShowLocationSheet: $shouldShowLocationSheet, location: $location, date: $date)
                 } header: {
                     Text("Details")
                 }
-
-                
                 Section {
                     Toggle("Image?", isOn: $photoNeed)
                     if photoNeed{
@@ -87,10 +69,8 @@ struct AddMealView: View {
                             Text("Photo Library")
                                 .tag(CameraSourceType.library)
                         }
-                        showPhotoSelection()
+                        imageView()
                     }
-                    
-
                 } header: {
                     Text("Photo")
                 }
@@ -152,105 +132,150 @@ struct AddMealView: View {
                                 .foregroundColor(meals.isEmpty ? .gray : Color(uiColor: .systemGreen))
                         }
                         .disabled(meals.isEmpty)
-
                     }
-                
             })
         .navigationTitle(Text("Add Meal"))
         }
     }
     
-    func showSearchLocationSheet(){
-        shouldShowLocationSheet.toggle()
-    }
     
+}
+
+//MARK: - ViewBuilder
+extension AddMealView{
     @ViewBuilder
-    func showPhotoSelection() -> some View{
+    func imageView() -> some View{
         switch sourceSelection {
         case .camera:
-            if let selectedPhoto {
-                HStack{
-                    Image(uiImage: selectedPhoto)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: 200, maxHeight: 100)
-                        .cornerRadius(10)
-                    Button {
-                        self.selectedPhoto = nil
-                    } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.title)
-                            .foregroundColor(.red)
-                    }
-
-                }
-                
-            }
-            Button {
-                shouldShowCamera.toggle()
-            } label: {
-                Text("Take a photo")
-            }
+            CameraView(selectedPhoto: $selectedPhoto, shouldShowCamera: $shouldShowCamera)
         case .library:
-            if let selectedImageData,
-               let uiImage = UIImage(data: selectedImageData) {
-                HStack{
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: 200, maxHeight: 100)
-                        .cornerRadius(10)
-                    Button {
-                        self.selectedImageData = nil
-                        self.selectedImage = nil
-                    } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.title)
-                            .foregroundColor(.red)
-                    }
+            ImageView(selectedImageData: $selectedImageData, selectedImage: $selectedImage)
+        }
+    }
+}
 
+//MARK: - ImageView
+struct ImageView: View {
+    
+    @Binding var selectedImageData: Data?
+    @Binding var selectedImage: PhotosPickerItem?
+    
+    var body: some View {
+        if let selectedImageData,
+           let uiImage = UIImage(data: selectedImageData) {
+            HStack{
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 200, maxHeight: 100)
+                    .cornerRadius(10)
+                Button {
+                    self.selectedImageData = nil
+                    self.selectedImage = nil
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title)
+                        .foregroundColor(.red)
                 }
             }
-            PhotosPicker(selection: $selectedImage) {
-                Text("Select a photo")
+        }
+        PhotosPicker(selection: $selectedImage) {
+            Text("Select a photo")
+        }
+    }
+}
+
+//MARK: - CameraView
+struct CameraView: View {
+    
+    @Binding var selectedPhoto: UIImage?
+    @Binding var shouldShowCamera: Bool
+    
+    var body: some View{
+        if let selectedPhoto {
+            HStack{
+                Image(uiImage: selectedPhoto)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 200, maxHeight: 100)
+                    .cornerRadius(10)
+                Button {
+                    self.selectedPhoto = nil
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title)
+                        .foregroundColor(.red)
+                }
+
             }
             
+        }
+        Button {
+            shouldShowCamera.toggle()
+        } label: {
+            Text("Take a photo")
+        }
+    }
+}
+
+//MARK: - LocationView
+struct LocationView: View {
+    @Binding var shouldShowLocationSheet: Bool
+    @Binding var location: String
+    @Binding var date: Date
+    
+    var body: some View {
+        HStack {
+            Button {
+                shouldShowLocationSheet.toggle()
+            } label: {
+                Image(systemName: "mappin.circle.fill")
+            }
+            TextField("Meal Location",text: $location, prompt: Text("Meal Location"))
+        }
+        DatePicker("Date", selection: $date)
+    }
+}
+
+//MARK: - MealItemListView
+struct MealItemListView: View {
+    
+    @Binding var meals: [String]
+    
+    var body: some View {
+        List {
+            ForEach(meals, id: \.self) { item in
+                Text(item)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.4)
+            }
+            .onDelete(perform: deleteMeal)
         }
     }
     
     func deleteMeal(at offsets: IndexSet){
         meals.remove(atOffsets: offsets)
     }
+}
+
+//MARK: - Actions
+extension AddMealView{
     
     func saveMeal(){
-        let meal = Meal(context: context)
-        meal.id = UUID()
-        meal.items = meals
-        meal.date = date
-        if let selectedLocation{
-            let location = Location(context: context)
-            location.name = selectedLocation.item.placemark.name ?? ""
-            location.latitude = selectedLocation.item.placemark.coordinate.latitude
-            location.longitude = selectedLocation.item.placemark.coordinate.longitude
-            meal.selectedLocation = location
-            
-        } else if !location.isEmpty{
-            meal.location = location
-        }
-        if let selectedImageData{
-            meal.image = selectedImageData
-        } else if let selectedPhoto{
-            meal.image = selectedPhoto.jpegData(compressionQuality: 0.8)
-        }
-        PersistenceController.save(context: context)
+        mealDataManager
+            .addMeal(items: meals, date: date,
+                     selectedLocation: selectedLocation,
+                     location: location,
+                     selectedImageData: selectedImageData,
+                     selectedPhoto: selectedPhoto,
+                     context: context)
         presentationMode.wrappedValue.dismiss()
-       
     }
 }
 
 
 struct AddMealView_Previews: PreviewProvider {
     static var previews: some View {
-            AddMealView()
+        AddMealView(mealDataManager: .shared)
     }
 }
