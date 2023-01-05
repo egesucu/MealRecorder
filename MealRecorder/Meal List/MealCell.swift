@@ -21,7 +21,7 @@ struct MealCell: View {
                 .fill(Color(uiColor: .systemGroupedBackground))
                 .shadow(color: .gray , radius: 4)
             VStack(alignment: .center) {
-                HStack{
+                HStack(alignment: .center ,spacing: 0){
                     if let location = meal.selectedLocation{
                         Map(coordinateRegion: .constant(MKCoordinateRegion(center: .init(latitude: location.latitude, longitude: location.longitude), span: .init(latitudeDelta: 0.0005, longitudeDelta: 0.0005))), interactionModes: [], annotationItems: [location], annotationContent: { item in
                             MapMarker(coordinate: .init(latitude: location.latitude, longitude: location.longitude))
@@ -48,7 +48,7 @@ struct MealCell: View {
                                 showMealImage()
                             }
                     }
-                }.frame(height: 150)
+                }.frame(height: 110)
                 
                 HStack {
                     VStack(alignment: .leading) {
@@ -68,6 +68,7 @@ struct MealCell: View {
                 }.padding(.all)
             }
         }
+        .padding(.top)
         .sheet(isPresented: $showingMealImage) {
             
             MealImageDetailView(meal: meal)

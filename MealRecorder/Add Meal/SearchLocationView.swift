@@ -17,26 +17,34 @@ struct SearchLocationView: View {
     @Binding var selectedLocation: MapItem?
     let manager = CLLocationManager()
     @State private var userLocation : CLLocation? = nil
-    @State private var showSearchPop = false
+    @State private var showSearchPop = true
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
         NavigationStack {
             VStack{
                 List(filterLocations()) { location in
-                    HStack(alignment: .top) {
-                        VStack(alignment: .leading) {
-                            Text("Place:").bold()
-                            Text("Distance:").bold()
-                            Text("Address:").bold()
+                    VStack{
+                        Group{
+                            HStack(alignment: .top) {
+                                VStack(alignment: .leading) {
+                                    Text("Place:").bold()
+                                    Text("Distance:").bold()
+                                    Text("Address:").bold()
+                                }
+                                VStack(alignment: .leading) {
+                                    Text(location.item.placemark.name ?? "Unknown Place")
+                                    Text(calculateDistance(from: location.item.placemark.location))
+                                    Text(location.item.placemark.title ?? "Unknown Place")
+                                }
+                            }
                         }
-                        VStack(alignment: .leading) {
-                            Text(location.item.placemark.name ?? "Unknown Place")
-                            Text(calculateDistance(from: location.item.placemark.location))
-                            Text(location.item.placemark.title ?? "Unknown Place")
-                        }
-                    }
-                    .onTapGesture {
+                        Map(coordinateRegion: .constant(MKCoordinateRegion(center: .init(latitude: location.item.placemark.coordinate.latitude, longitude: location.item.placemark.coordinate.longitude), span: .init(latitudeDelta: 0.0005, longitudeDelta: 0.0005))), interactionModes: [], annotationItems: [location], annotationContent: { item in
+                            MapMarker(coordinate: .init(latitude: location.item.placemark.coordinate.latitude, longitude: location.item.placemark.coordinate.longitude))
+                        })
+                        .frame(height: 150)
+                        .cornerRadius(20)
+                    }.onTapGesture {
                         selectedLocation = location
                         dismiss()
                     }
@@ -53,6 +61,7 @@ struct SearchLocationView: View {
                 })
                 .alert("Search Place", isPresented: $showSearchPop, actions: {
                     TextField("eg. Starbucks", text: $searchKeywords)
+                        .autocorrectionDisabled()
                     Button("OK", action: {
                         searchPlace(with: searchKeywords)
                     })
@@ -94,7 +103,7 @@ struct SearchLocationView: View {
                 return "\(Int(distance)) m"
             }
         }
-        return ""
+        return "N/A"
     }
     
     

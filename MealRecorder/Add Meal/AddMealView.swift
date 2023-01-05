@@ -61,16 +61,12 @@ struct AddMealView: View {
                     Text("Details")
                 }
                 Section {
-                    Toggle("Image?", isOn: $photoNeed)
-                    if photoNeed{
-                        Picker("Select Source", selection: $sourceSelection) {
-                            Text("Camera")
-                                .tag(CameraSourceType.camera)
-                            Text("Photo Library")
-                                .tag(CameraSourceType.library)
-                        }
-                        imageView()
-                    }
+                    SourceSelectionView(photoNeed: $photoNeed,
+                                        sourceSelection: $sourceSelection,
+                                        selectedImageData: $selectedImageData,
+                                        selectedImage: $selectedImage,
+                                        selectedPhoto: $selectedPhoto,
+                                        shouldShowCamera: $shouldShowCamera)
                 } header: {
                     Text("Photo")
                 }
@@ -98,6 +94,7 @@ struct AddMealView: View {
                     Text("What did you eat?")
                         .bold()
                     TextField("Burger", text: $customAlertText)
+                        .autocorrectionDisabled()
                         .textFieldStyle(.roundedBorder)
                         .autocorrectionDisabled(true)
                 }
@@ -109,7 +106,7 @@ struct AddMealView: View {
                     
                 }),
                 .regular(content: {
-                    Text("Send")
+                    Text("Add")
                 }, action: {
                     meals.append(customAlertText)
                     customAlertText = ""
@@ -121,7 +118,9 @@ struct AddMealView: View {
                         Button{
                             presentationMode.wrappedValue.dismiss()
                         } label: {
-                            Text("Cancel").foregroundColor(Color(uiColor: .systemRed))
+                            Text("Cancel")
+                                .bold()
+                                .foregroundColor(Color(uiColor: .systemRed))
                         }
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -129,6 +128,7 @@ struct AddMealView: View {
                             self.saveMeal()
                         } label: {
                             Text("Add")
+                                .bold()
                                 .foregroundColor(meals.isEmpty ? .gray : Color(uiColor: .systemGreen))
                         }
                         .disabled(meals.isEmpty)
@@ -137,130 +137,9 @@ struct AddMealView: View {
         .navigationTitle(Text("Add Meal"))
         }
     }
-    
-    
 }
 
-//MARK: - ViewBuilder
 extension AddMealView{
-    @ViewBuilder
-    func imageView() -> some View{
-        switch sourceSelection {
-        case .camera:
-            CameraView(selectedPhoto: $selectedPhoto, shouldShowCamera: $shouldShowCamera)
-        case .library:
-            ImageView(selectedImageData: $selectedImageData, selectedImage: $selectedImage)
-        }
-    }
-}
-
-//MARK: - ImageView
-struct ImageView: View {
-    
-    @Binding var selectedImageData: Data?
-    @Binding var selectedImage: PhotosPickerItem?
-    
-    var body: some View {
-        if let selectedImageData,
-           let uiImage = UIImage(data: selectedImageData) {
-            HStack{
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: 200, maxHeight: 100)
-                    .cornerRadius(10)
-                Button {
-                    self.selectedImageData = nil
-                    self.selectedImage = nil
-                } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.title)
-                        .foregroundColor(.red)
-                }
-            }
-        }
-        PhotosPicker(selection: $selectedImage) {
-            Text("Select a photo")
-        }
-    }
-}
-
-//MARK: - CameraView
-struct CameraView: View {
-    
-    @Binding var selectedPhoto: UIImage?
-    @Binding var shouldShowCamera: Bool
-    
-    var body: some View{
-        if let selectedPhoto {
-            HStack{
-                Image(uiImage: selectedPhoto)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: 200, maxHeight: 100)
-                    .cornerRadius(10)
-                Button {
-                    self.selectedPhoto = nil
-                } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.title)
-                        .foregroundColor(.red)
-                }
-
-            }
-            
-        }
-        Button {
-            shouldShowCamera.toggle()
-        } label: {
-            Text("Take a photo")
-        }
-    }
-}
-
-//MARK: - LocationView
-struct LocationView: View {
-    @Binding var shouldShowLocationSheet: Bool
-    @Binding var location: String
-    @Binding var date: Date
-    
-    var body: some View {
-        HStack {
-            Button {
-                shouldShowLocationSheet.toggle()
-            } label: {
-                Image(systemName: "mappin.circle.fill")
-            }
-            TextField("Meal Location",text: $location, prompt: Text("Meal Location"))
-        }
-        DatePicker("Date", selection: $date)
-    }
-}
-
-//MARK: - MealItemListView
-struct MealItemListView: View {
-    
-    @Binding var meals: [String]
-    
-    var body: some View {
-        List {
-            ForEach(meals, id: \.self) { item in
-                Text(item)
-                    .lineLimit(2)
-                    .minimumScaleFactor(0.4)
-            }
-            .onDelete(perform: deleteMeal)
-        }
-    }
-    
-    func deleteMeal(at offsets: IndexSet){
-        meals.remove(atOffsets: offsets)
-    }
-}
-
-//MARK: - Actions
-extension AddMealView{
-    
     func saveMeal(){
         mealDataManager
             .addMeal(items: meals, date: date,

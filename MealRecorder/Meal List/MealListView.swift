@@ -34,32 +34,37 @@ struct MealListView: View {
     
     var body: some View{
         NavigationView{
-            VStack{
-                ShowView()
-                    .toolbar {
-                        Menu(content: {
-                            Picker("Destination", selection: $filter) {
-                                ForEach(MealFilter.allCases, id: \.self) {
-                                    Text($0.rawValue)
+            ZStack(alignment: .bottom){
+                VStack{
+                    ShowView()
+                        .toolbar {
+                            Menu(content: {
+                                Picker("Destination", selection: $filter) {
+                                    ForEach(MealFilter.allCases, id: \.self) {
+                                        Text($0.rawValue)
+                                    }
                                 }
-                            }
-                        }, label: {
-                            Text(filter.rawValue).bold()
-                            
-                        })
-                        .disabled(meals.count == 0)
-                        EditButton()
+                            }, label: {
+                                Text(filter.rawValue).bold()
+                                
+                            })
                             .disabled(meals.count == 0)
-                        
-                        Button {
-                            self.showAddMeal.toggle()
-                        } label: {
-                            Label("Add Meal", systemImage: showAddMeal ? "plus.circle.fill" : "plus.circle")
+                            EditButton()
+                                .disabled(meals.count == 0)
                         }
-                    }
-                    .navigationTitle(Text("Meals"))
+                        .navigationTitle(Text("Meals"))
+                }
+                Button {
+                    showAddMeal.toggle()
+                } label: {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.system(size: 50))
+                }
+                .contentShape(Circle())
+
             }
             .sheet(isPresented: $showAddMeal, onDismiss: {
+                filterMeals()
                 }, content: {
                     AddMealView(mealDataManager: mealDataManager)
                         .environment(\.managedObjectContext,context)
