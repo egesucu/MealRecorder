@@ -59,8 +59,9 @@ struct MealListView: View {
                 } label: {
                     Image(systemName: "plus.circle.fill")
                         .font(.system(size: 50))
+                        .symbolRenderingMode(.palette)
+                        .foregroundStyle(Color(.systemBackground),.orange)
                 }
-                .contentShape(Circle())
 
             }
             .sheet(isPresented: $showAddMeal, onDismiss: {
