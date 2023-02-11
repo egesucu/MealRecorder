@@ -8,19 +8,14 @@
 import SwiftUI
 
 struct ImagePickerView: UIViewControllerRepresentable {
-    func makeCoordinator() -> Coordinator {
-        return Coordinator(self)
-    }
-
-    @Binding var selectedImage: UIImage?
-    
-    @Environment(\.presentationMode) var isPresented
-    var sourceType: UIImagePickerController.SourceType
+    @Binding var selectedImageData: Data?
+    @Environment(\.dismiss) var dismiss
         
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let imagePicker = UIImagePickerController()
-        imagePicker.sourceType = self.sourceType
+        imagePicker.sourceType = .camera
         imagePicker.allowsEditing = true
+        imagePicker.delegate = context.coordinator
         return imagePicker
     }
 
@@ -28,7 +23,11 @@ struct ImagePickerView: UIViewControllerRepresentable {
 
     }
     
-    class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
         var picker: ImagePickerView
         
         init(_ picker: ImagePickerView) {
@@ -36,10 +35,14 @@ struct ImagePickerView: UIViewControllerRepresentable {
         }
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            picker.allowsEditing = true
             guard let selectedImage = info[.editedImage] as? UIImage else { return }
-            self.picker.selectedImage = selectedImage
-            self.picker.isPresented.wrappedValue.dismiss()
+            self.picker.selectedImageData = selectedImage.jpegData(compressionQuality: 0.8)
+            self.picker.dismiss()
+        }
+        
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            print("User did not choose an image")
+            self.picker.dismiss()
         }
         
     }

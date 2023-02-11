@@ -13,35 +13,31 @@ enum CameraSourceType: Hashable{
     case camera,library
 }
 
+enum ActiveSheets: Identifiable{
+    case photo,location
+    
+    var id: Int {
+        hashValue
+    }
+}
+
 struct AddMealView: View {
     
-    @State private var location = ""
-    @State private var date = Date()
-    @State private var photoNeed = false
-    @State private var shouldShowCamera = false
-    @State private var sourceSelection : CameraSourceType = .camera
-    @State private var selectedPhoto : UIImage?
-    @State private var selectedImage: PhotosPickerItem?
-    @State private var selectedImageData: Data? = nil
-    @State private var selectedLocation: MapItem? = .init(item: .init())
+    @StateObject var addMealViewModel = AddMealViewModel()
+    @StateObject var customAlertManager = CustomAlertManager()
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var context
     
-    @StateObject var customAlertManager = CustomAlertManager()
-    @State private var meals: [String] = []
-    @State private var customAlertText: String = ""
-    @State private var shouldShowLocationSheet = false
-    
     var mealDataManager: MealDataManager
-
-    var body: some View{
+    
+    var body: some View {
         
-        NavigationView {
+        NavigationStack {
             Form{
-                if !meals.isEmpty{
+                if !addMealViewModel.meals.isEmpty{
                     Section {
-                        MealItemListView(meals: $meals)
+                        MealItemListView(meals: $addMealViewModel.meals)
                     } header: {
                         Text("Meals")
                     }
@@ -55,106 +51,135 @@ struct AddMealView: View {
                     }
 
                 }
+                
                 Section {
-                    LocationView(shouldShowLocationSheet: $shouldShowLocationSheet, location: $location, date: $date)
+                    HStack {
+                        Button {
+                            addMealViewModel.activeSheet = .location
+                        } label: {
+                            Image(systemName: "mappin.circle.fill")
+                        }
+                        TextField("Meal Location",text: $addMealViewModel.location, prompt: Text("Meal Location"))
+                    }
+                    DatePicker("Date", selection: $addMealViewModel.date)
                 } header: {
                     Text("Details")
                 }
+
                 Section {
-                    SourceSelectionView(photoNeed: $photoNeed,
-                                        sourceSelection: $sourceSelection,
-                                        selectedImageData: $selectedImageData,
-                                        selectedImage: $selectedImage,
-                                        selectedPhoto: $selectedPhoto,
-                                        shouldShowCamera: $shouldShowCamera)
-                } header: {
-                    Text("Photo")
-                }
-            }
-            .onChange(of: selectedImage) { newItem in
-                Task {
-                    if let data = try? await newItem?.loadTransferable(type: Data.self) {
-                        selectedImageData = data
+                    Button {
+                        addMealViewModel.activeSheet = .photo
+                    } label: {
+                        Text("Add a photo")
                     }
                 }
-            }
-            .sheet(isPresented: $shouldShowLocationSheet, onDismiss: {
-                if let selectedLocation{
-                    location = selectedLocation.item.placemark.name ?? ""
+
+                Section {
+                    PhotosPicker(selection: $addMealViewModel.selectedImage, matching: .images, photoLibrary: .shared()){
+                        Text("Select an image")
+                    }
                 }
-            }, content: {
-                SearchLocationView(selectedLocation: $selectedLocation)
+
+                if let selectedImageData = addMealViewModel.selectedImageData,
+                let uiImage = UIImage(data: selectedImageData){
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFit()
+                        .padding(.all)
+                }
+            }
+            .navigationTitle(Text("Add Meal"))
+            .toolbar{
+                bottomToolbar()
+            }
+        }
+        .onChange(of: addMealViewModel.selectedImage) { image in
+            Task {
+                if let data = try? await image?.loadTransferable(type: Data.self) {
+                    addMealViewModel.selectedImageData = data
+                }
+            }
+        }
+        .sheet(item: $addMealViewModel.activeSheet, content: { item in
+            if let item{
+                switch item{
+                case .location:
+                    SearchLocationView(addMealViewModel: addMealViewModel)
+                case .photo:
+                    ImagePickerView(selectedImageData: $addMealViewModel.selectedImageData)
+                        .ignoresSafeArea()
+                }
+            }
+        })
+        .customAlert(manager: customAlertManager, content: {
+            VStack {
+                Text("What did you eat?")
+                    .bold()
+                TextField("Burger", text: $addMealViewModel.customAlertText)
+                    .autocorrectionDisabled()
+                    .textFieldStyle(.roundedBorder)
+                    .autocorrectionDisabled(true)
+            }
+        }, buttons: [
+            .regular(content: {
+                Text("Cancel")
+                    .bold()
+            }, action: {
+
+            }),
+            .regular(content: {
+                Text("Add")
+            }, action: {
+                addMealViewModel.meals.append(addMealViewModel.customAlertText)
+                addMealViewModel.customAlertText = ""
             })
-            .sheet(isPresented: self.$shouldShowCamera) {
-                ImagePickerView(selectedImage: $selectedPhoto, sourceType: .camera)
-                    .ignoresSafeArea()
+        ])
+        
+    }
+    
+    @ToolbarContentBuilder
+    func bottomToolbar() -> some ToolbarContent{
+        ToolbarItem(placement: .navigationBarLeading) {
+            Button{
+                dismiss()
+            } label: {
+                Text("Cancel")
+                    .bold()
+                    .foregroundColor(Color(uiColor: .systemRed))
             }
-            .customAlert(manager: customAlertManager, content: {
-                VStack {
-                    Text("What did you eat?")
-                        .bold()
-                    TextField("Burger", text: $customAlertText)
-                        .autocorrectionDisabled()
-                        .textFieldStyle(.roundedBorder)
-                        .autocorrectionDisabled(true)
-                }
-            }, buttons: [
-                .regular(content: {
-                    Text("Cancel")
-                        .bold()
-                }, action: {
-                    
-                }),
-                .regular(content: {
-                    Text("Add")
-                }, action: {
-                    meals.append(customAlertText)
-                    customAlertText = ""
-                })
-            ])
-            .toolbar(content: {
-                
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button{
-                            presentationMode.wrappedValue.dismiss()
-                        } label: {
-                            Text("Cancel")
-                                .bold()
-                                .foregroundColor(Color(uiColor: .systemRed))
-                        }
-                    }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            self.saveMeal()
-                        } label: {
-                            Text("Add")
-                                .bold()
-                                .foregroundColor(meals.isEmpty ? .gray : Color(uiColor: .systemGreen))
-                        }
-                        .disabled(meals.isEmpty)
-                    }
-            })
-        .navigationTitle(Text("Add Meal"))
+        }
+        ToolbarItem(placement: .navigationBarTrailing) {
+            Button {
+                self.saveMeal()
+            } label: {
+                Text("Add")
+                    .bold()
+                    .foregroundColor(addMealViewModel.meals.isEmpty ? .gray : Color(uiColor: .systemGreen))
+            }
+            .disabled(addMealViewModel.meals.isEmpty)
         }
     }
+    
 }
 
 extension AddMealView{
     func saveMeal(){
         mealDataManager
-            .addMeal(items: meals, date: date,
-                     selectedLocation: selectedLocation,
-                     location: location,
-                     selectedImageData: selectedImageData,
-                     selectedPhoto: selectedPhoto,
+            .addMeal(items: addMealViewModel.meals, date: addMealViewModel.date,
+                     selectedLocation: addMealViewModel.selectedLocation,
+                     location: addMealViewModel.location,
+                     selectedImageData: addMealViewModel.selectedImageData,
                      context: context)
-        presentationMode.wrappedValue.dismiss()
+            dismiss()
     }
 }
 
 
+
 struct AddMealView_Previews: PreviewProvider {
     static var previews: some View {
-        AddMealView(mealDataManager: .shared)
+        NavigationStack {
+            AddMealView(mealDataManager: .shared)
+        }
     }
 }

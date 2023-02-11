@@ -41,7 +41,7 @@ struct MealDataManager {
         }
     }
     
-    func addMeal(items: [String], date: Date, selectedLocation: MapItem?, location: String, selectedImageData: Data?, selectedPhoto: UIImage?, context: NSManagedObjectContext){
+    func addMeal(items: [String], date: Date, selectedLocation: MapItem?, location: String, selectedImageData: Data?,  context: NSManagedObjectContext){
         let meal = Meal(context: context)
         meal.id = UUID()
         meal.items = items
@@ -58,8 +58,6 @@ struct MealDataManager {
         }
         if let selectedImageData{
             meal.image = selectedImageData
-        } else if let selectedPhoto{
-            meal.image = selectedPhoto.jpegData(compressionQuality: 0.8)
         }
         PersistenceController.save(context: context)
     }

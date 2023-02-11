@@ -14,11 +14,11 @@ struct SearchLocationView: View {
     
     @State private var locations: [MapItem] = []
     @State private var searchKeywords = ""
-    @Binding var selectedLocation: MapItem?
     let manager = CLLocationManager()
     @State private var userLocation : CLLocation? = nil
     @State private var showSearchPop = true
     @Environment(\.dismiss) var dismiss
+    @ObservedObject var addMealViewModel: AddMealViewModel
     
     var body: some View {
         NavigationStack {
@@ -45,7 +45,8 @@ struct SearchLocationView: View {
                         .frame(height: 150)
                         .cornerRadius(20)
                     }.onTapGesture {
-                        selectedLocation = location
+                        addMealViewModel.updateLocation(location: location)
+                        addMealViewModel.updateLocation(location: location.item.name ?? "")
                         dismiss()
                     }
                 }
@@ -106,8 +107,6 @@ struct SearchLocationView: View {
         return "N/A"
     }
     
-    
-    
     func searchPlace(with keyword: String){
         self.locations.removeAll()
         let request = MKLocalSearch.Request()
@@ -125,14 +124,6 @@ struct SearchLocationView: View {
                     self.locations.append(location)
                 }
             }
-        }
-    }
-}
-
-struct SearchLocationView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            SearchLocationView(selectedLocation: .constant(.init(item: .init())))
         }
     }
 }

@@ -13,27 +13,33 @@ struct ImageView: View {
     @Binding var selectedImageData: Data?
     @Binding var selectedImage: PhotosPickerItem?
     
+    @State private var imageData: Data?
+    
     var body: some View {
-        if let selectedImageData,
-           let uiImage = UIImage(data: selectedImageData) {
+        if let imageData,
+           let uiImage = UIImage(data: imageData) {
             HStack{
                 Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: 200, maxHeight: 100)
                     .cornerRadius(10)
-                Button {
-                    self.selectedImageData = nil
-                    self.selectedImage = nil
+                Button(role: .destructive) {
+                    self.imageData = nil
                 } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.title)
-                        .foregroundColor(.red)
+                    Text("Delete the image")
                 }
             }
         }
-        PhotosPicker(selection: $selectedImage) {
-            Text("Select a photo")
+        PhotosPicker(selection: $selectedImage,matching: .all(of: [.images,.depthEffectPhotos,.panoramas,.screenshots,.bursts]),photoLibrary: .shared()){
+            Text("Select an image")
         }
+                     .onChange(of: selectedImage) { image in
+                         Task {
+                             if let data = try? await image?.loadTransferable(type: Data.self) {
+                                 imageData = data
+                             }
+                         }
+                     }
     }
 }
