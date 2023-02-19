@@ -10,7 +10,6 @@ import MapKit
 
 struct MealCell: View {
 
-    @State private var showingMealImage = false
     @GestureState private var scale: CGFloat = 1.0
 
     var meal: Meal
@@ -45,17 +44,6 @@ struct MealCell: View {
                             }
                         }
                     }
-
-                    if let data = meal.image,
-                       let image = UIImage(data: data) {
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFit()
-                            .cornerRadius(10, corners: [.topRight])
-                            .onTapGesture {
-                                showMealImage()
-                            }
-                    }
                 }.frame(height: 110)
 
                 HStack {
@@ -77,45 +65,6 @@ struct MealCell: View {
             }
         }
         .padding(.top)
-        .sheet(isPresented: $showingMealImage) {
-
-            MealImageDetailView(meal: meal)
-
-        }
-    }
-
-    func showMealImage() {
-        showingMealImage.toggle()
-    }
-}
-
-struct MealImageDetailView: View {
-    @Environment(\.dismiss) var dismiss
-    var meal: Meal
-
-    var body: some View {
-        ZStack(alignment: .topTrailing) {
-
-            VStack {
-                Spacer()
-                if let data = meal.image,
-                   let image = UIImage(data: data) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-
-                }
-                Spacer()
-            }
-
-            Button {
-                dismiss()
-            } label: {
-                Image(systemName: "xmark.circle.fill")
-                    .foregroundColor(.accentColor)
-                    .font(.largeTitle)
-            }
-        }.padding(.all)
     }
 
 }
@@ -126,7 +75,6 @@ struct MealCell_Previews: PreviewProvider {
         let meal = Meal(context: PersistenceController.preview.container.viewContext)
         meal.items = ["Cake", "Burger"]
         meal.date = Date.now
-        meal.image = UIImage(named: "no-meal-photo")?.jpegData(compressionQuality: 0.8)
         let demoLocation = Location(context: PersistenceController.preview.container.viewContext)
         demoLocation.name = "Starbucks"
         demoLocation.latitude = 41.032464900467325

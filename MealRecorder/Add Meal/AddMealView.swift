@@ -14,7 +14,7 @@ enum CameraSourceType: Hashable {
 }
 
 enum ActiveSheets: Identifiable {
-    case photo, location
+    case location
 
     var id: Int {
         hashValue
@@ -55,60 +55,34 @@ struct AddMealView: View {
 
                 Section {
                     HStack {
+                        Text("Meal Location")
                         Button {
                             addMealViewModel.activeSheet = .location
                         } label: {
                             Image(systemName: "mappin.circle.fill")
                         }
-                        TextField("Meal Location", text: $addMealViewModel.location, prompt: Text("Meal Location"))
+                        if let location = addMealViewModel.selectedLocation,
+                        let name = location.item.name {
+                            Text(name)
+                        } else {
+                            Spacer()
+                        }
                     }
                     DatePicker("Date", selection: $addMealViewModel.date)
                 } header: {
                     Text("Details")
                 }
 
-                Section {
-                    Button {
-                        addMealViewModel.activeSheet = .photo
-                    } label: {
-                        Text("Add a photo")
-                    }
-                }
-
-                Section {
-                    PhotosPicker(selection: $addMealViewModel.selectedImage,
-                                 matching: .images, photoLibrary: .shared()) {
-                        Text("Select an image")
-                    }
-                }
-
-                if let selectedImageData = addMealViewModel.selectedImageData,
-                let uiImage = UIImage(data: selectedImageData) {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .scaledToFit()
-                        .padding(.all)
-                }
             }
             .navigationTitle(Text("Add Meal"))
             .toolbar {
                 bottomToolbar()
             }
         }
-        .onChange(of: addMealViewModel.selectedImage) { image in
-            Task {
-                if let data = try? await image?.loadTransferable(type: Data.self) {
-                    addMealViewModel.selectedImageData = data
-                }
-            }
-        }
         .sheet(item: $addMealViewModel.activeSheet, content: { item in
             switch item {
             case .location:
                 SearchLocationView(addMealViewModel: addMealViewModel)
-            case .photo:
-                ImagePickerView(selectedImageData: $addMealViewModel.selectedImageData)
-                    .ignoresSafeArea()
             }
         })
         .customAlert(manager: customAlertManager, content: {
@@ -167,7 +141,6 @@ extension AddMealView {
         mealDataManager
             .addMeal(items: addMealViewModel.meals, date: addMealViewModel.date,
                      selectedLocation: addMealViewModel.selectedLocation,
-                     selectedImageData: addMealViewModel.selectedImageData,
                      context: context)
             dismiss()
     }

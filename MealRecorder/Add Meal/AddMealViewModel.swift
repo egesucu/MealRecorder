@@ -6,15 +6,11 @@
 //
 
 import SwiftUI
-import PhotosUI
 
 class AddMealViewModel: ObservableObject {
 
     @Published var location = ""
     @Published var date: Date = .now
-    @Published var photoNeed = false
-    @Published var selectedImage: PhotosPickerItem?
-    @Published var selectedImageData: Data?
     @Published var selectedLocation: MapItem?
     @Published var meals: [String] = []
     @Published var customAlertText = ""
