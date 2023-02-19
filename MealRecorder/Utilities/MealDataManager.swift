@@ -41,7 +41,10 @@ struct MealDataManager {
         }
     }
 
-    func addMeal(items: [String], date: Date, selectedLocation: MapItem?, location: String, selectedImageData: Data?, context: NSManagedObjectContext) {
+    func addMeal(items: [String], date: Date,
+                 selectedLocation: MapItem?,
+                 selectedImageData: Data?,
+                 context: NSManagedObjectContext) {
         let meal = Meal(context: context)
         meal.id = UUID()
         meal.items = items
@@ -53,8 +56,6 @@ struct MealDataManager {
             location.longitude = selectedLocation.item.placemark.coordinate.longitude
             meal.selectedLocation = location
 
-        } else if !location.isEmpty {
-            meal.location = location
         }
         if let selectedImageData {
             meal.image = selectedImageData

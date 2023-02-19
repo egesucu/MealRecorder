@@ -34,7 +34,8 @@ struct ImagePickerView: UIViewControllerRepresentable {
             self.picker = picker
         }
 
-        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        func imagePickerController(_ picker: UIImagePickerController,
+                                   didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
             guard let selectedImage = info[.editedImage] as? UIImage else { return }
             self.picker.selectedImageData = selectedImage.jpegData(compressionQuality: 0.8)
             self.picker.dismiss()

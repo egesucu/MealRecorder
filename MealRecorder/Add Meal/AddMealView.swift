@@ -47,7 +47,8 @@ struct AddMealView: View {
                     Button {
                         customAlertManager.show()
                     } label: {
-                        Label("Add Meal", systemImage: customAlertManager.isPresented ? "fork.knife.circle.fill" : "fork.knife.circle")
+                        Label("Add Meal", systemImage: customAlertManager.isPresented ?
+                              "fork.knife.circle.fill" : "fork.knife.circle")
                     }
 
                 }
@@ -75,7 +76,8 @@ struct AddMealView: View {
                 }
 
                 Section {
-                    PhotosPicker(selection: $addMealViewModel.selectedImage, matching: .images, photoLibrary: .shared()) {
+                    PhotosPicker(selection: $addMealViewModel.selectedImage,
+                                 matching: .images, photoLibrary: .shared()) {
                         Text("Select an image")
                     }
                 }
@@ -165,7 +167,6 @@ extension AddMealView {
         mealDataManager
             .addMeal(items: addMealViewModel.meals, date: addMealViewModel.date,
                      selectedLocation: addMealViewModel.selectedLocation,
-                     location: addMealViewModel.location,
                      selectedImageData: addMealViewModel.selectedImageData,
                      context: context)
             dismiss()

@@ -31,7 +31,9 @@ struct ImageView: View {
                 }
             }
         }
-        PhotosPicker(selection: $selectedImage, matching: .all(of: [.images, .depthEffectPhotos, .panoramas, .screenshots, .bursts]), photoLibrary: .shared()) {
+        PhotosPicker(selection: $selectedImage,
+                     matching: .all(of: [.images, .depthEffectPhotos, .panoramas, .screenshots, .bursts]),
+                     photoLibrary: .shared()) {
             Text("Select an image")
         }
                      .onChange(of: selectedImage) { image in
