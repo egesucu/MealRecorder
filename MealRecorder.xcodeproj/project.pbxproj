@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9D1E5AF929A256510067DFA1 /* AlertKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9D1E5AF829A256510067DFA1 /* AlertKit */; };
+		9D3F632829A26D8A00C00DAD /* MealType+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3F632729A26D8A00C00DAD /* MealType+Extensions.swift */; };
 		9D471C92271C751A002641E9 /* MealListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D471C91271C751A002641E9 /* MealListView.swift */; };
 		9D471C94271C8054002641E9 /* MealCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D471C93271C8054002641E9 /* MealCell.swift */; };
 		9D471C96271C8468002641E9 /* AddMealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D471C95271C8468002641E9 /* AddMealView.swift */; };
@@ -25,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9D3F632729A26D8A00C00DAD /* MealType+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MealType+Extensions.swift"; sourceTree = "<group>"; };
 		9D471C91271C751A002641E9 /* MealListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealListView.swift; sourceTree = "<group>"; };
 		9D471C93271C8054002641E9 /* MealCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealCell.swift; sourceTree = "<group>"; };
 		9D471C95271C8468002641E9 /* AddMealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMealView.swift; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 				9D904DE9296757B200D6A2AF /* MealDataManager.swift */,
 				9D88309628F1D8A200320F98 /* DateUtility.swift */,
 				9DD8CD16271AEFBF00FCF1ED /* Persistence.swift */,
+				9D3F632729A26D8A00C00DAD /* MealType+Extensions.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -224,6 +227,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D3F632829A26D8A00C00DAD /* MealType+Extensions.swift in Sources */,
 				9DD8CD17271AEFBF00FCF1ED /* Persistence.swift in Sources */,
 				9DD7039F293B8EDF00F766DB /* SearchLocationView.swift in Sources */,
 				9D88309528F1D6D300320F98 /* CreditsView.swift in Sources */,

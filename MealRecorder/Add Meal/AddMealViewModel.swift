@@ -15,6 +15,7 @@ class AddMealViewModel: ObservableObject {
     @Published var meals: [String] = []
     @Published var customAlertText = ""
     @Published var activeSheet: ActiveSheets?
+    @Published var mealType: MealType = .snack
 
     func updateLocation(location: MapItem) {
         self.selectedLocation = location

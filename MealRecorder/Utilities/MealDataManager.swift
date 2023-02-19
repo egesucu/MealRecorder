@@ -43,11 +43,13 @@ struct MealDataManager {
 
     func addMeal(items: [String], date: Date,
                  selectedLocation: MapItem?,
-                 context: NSManagedObjectContext) {
+                 context: NSManagedObjectContext,
+                 type: MealType) {
         let meal = Meal(context: context)
         meal.id = UUID()
         meal.items = items
         meal.date = date
+        meal.mealType = type
         if let selectedLocation {
             let location = Location(context: context)
             location.name = selectedLocation.item.placemark.name

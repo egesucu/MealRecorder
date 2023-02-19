@@ -35,6 +35,13 @@ struct AddMealView: View {
 
         NavigationStack {
             Form {
+
+                Picker("Meal Type", selection: $addMealViewModel.mealType) {
+                    ForEach(MealType.allCases, id: \.self) { type in
+                        Text(type.text()).tag(type)
+                    }
+                }
+
                 if !addMealViewModel.meals.isEmpty {
                     Section {
                         MealItemListView(meals: $addMealViewModel.meals)
@@ -141,7 +148,8 @@ extension AddMealView {
         mealDataManager
             .addMeal(items: addMealViewModel.meals, date: addMealViewModel.date,
                      selectedLocation: addMealViewModel.selectedLocation,
-                     context: context)
+                     context: context,
+                     type: addMealViewModel.mealType)
             dismiss()
     }
 }

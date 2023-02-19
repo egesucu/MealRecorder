@@ -10,9 +10,10 @@ import MapKit
 
 struct MealCell: View {
 
-    @GestureState private var scale: CGFloat = 1.0
-
     var meal: Meal
+    @State private var locationRegion: MKCoordinateRegion = .init()
+    let locationSpan = MKCoordinateSpan(latitudeDelta: 0.0005, longitudeDelta: 0.0005)
+    @State private var locationCoordination = CLLocationCoordinate2D(latitude: 0, longitude: 0)
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -20,51 +21,71 @@ struct MealCell: View {
                 .fill(Color(uiColor: .systemGroupedBackground))
                 .shadow(color: .gray, radius: 4)
             VStack(alignment: .center) {
-                HStack(alignment: .center, spacing: 0) {
-                    if let location = meal.selectedLocation {
-                        Map(
-                            coordinateRegion:
-                                    .constant(MKCoordinateRegion(center:
-                                            .init(latitude: location.latitude, longitude: location.longitude),
-                                                                 span: .init(latitudeDelta: 0.0005,
-                                                                             longitudeDelta: 0.0005))),
-                            interactionModes: [],
-                            annotationItems: [location],
-                            annotationContent: { _ in
-                                MapMarker(coordinate: .init(latitude: location.latitude, longitude: location.longitude))
-                            })
+                if let location = meal.selectedLocation {
+                    Map(
+                        coordinateRegion: $locationRegion,
+                        interactionModes: [], annotationItems: [location],
+                        annotationContent: { _ in
+                            MapMarker(coordinate: locationCoordination)
 
-                        .cornerRadius(10, corners: [.topLeft])
-                        .onTapGesture {
-                            let url = URL(string: "maps://?saddr=&daddr=\(location.latitude),\(location.longitude)")
-                            if let url {
-                                if UIApplication.shared.canOpenURL(url) {
-                                    UIApplication.shared.open(url)
-                                }
+                    })
+                    .onChange(of: locationRegion.center.latitude, perform: { _ in
+                        updateLocation()
+                    })
+                    .frame(height: 110)
+                    .cornerRadius(10, corners: [.topLeft, .topRight])
+                    .onTapGesture {
+                        let url = URL(string: "maps://?saddr=&daddr=\(location.latitude),\(location.longitude)")
+                        if let url {
+                            if UIApplication.shared.canOpenURL(url) {
+                                UIApplication.shared.open(url)
                             }
                         }
                     }
-                }.frame(height: 110)
 
-                HStack {
-                    VStack(alignment: .leading) {
-                        ForEach(meal.items ?? [""], id: \.self) { item in
-                            HStack {
-                                Label {
-                                    Text(item)
-                                } icon: {
-                                    Image(systemName: "largecircle.fill.circle")
-                                        .foregroundColor(.accentColor)
-                                }
-                            }
+                }
+
+                Text(meal.mealType.text())
+                    .font(.title)
+                    .multilineTextAlignment(.center)
+
+                VStack(alignment: .leading) {
+                    ForEach(meal.items ?? [""], id: \.self) { item in
+                        HStack {
+                            Label(item, systemImage: "largecircle.fill.circle")
+                                .padding(.bottom, 3)
                         }
                     }
-                    Spacer()
-                    Text(meal.date?.formatted() ?? "").bold()
-                }.padding(.all)
+                }
+                .padding(.all)
+                .background(.white)
+                .cornerRadius(10)
+                if let date = meal.date {
+                    if Calendar.current.isDateInToday(date) {
+                        HStack(alignment: .center, spacing: 0) {
+                            Text("Today at: ")
+                            Text(date.formatted(.dateTime.hour().minute()))
+                                .bold()
+                        }
+
+                    } else {
+                        Text(date.formatted())
+                            .bold()
+                    }
+
+                }
+
             }
+        }.onAppear(perform: updateLocation)
+
+    }
+
+    func updateLocation() {
+        if let location = meal.selectedLocation {
+            locationRegion.center = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
+            locationRegion.span = locationSpan
+            locationCoordination = locationRegion.center
         }
-        .padding(.top)
     }
 
 }
