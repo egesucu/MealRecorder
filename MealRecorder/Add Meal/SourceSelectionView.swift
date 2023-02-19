@@ -9,18 +9,17 @@ import SwiftUI
 import PhotosUI
 
 struct SourceSelectionView: View {
-    
+
     @Binding var photoNeed: Bool
     @Binding var sourceSelection: CameraSourceType
     @Binding var selectedImageData: Data?
     @Binding var selectedImage: PhotosPickerItem?
     @Binding var selectedPhoto: UIImage?
     @Binding var shouldShowCamera: Bool
-    
-    
-    var body: some View{
+
+    var body: some View {
         Toggle("Image?", isOn: $photoNeed)
-        if photoNeed{
+        if photoNeed {
             Picker("Select Source", selection: $sourceSelection) {
                 Text("Camera")
                     .tag(CameraSourceType.camera)
@@ -34,5 +33,5 @@ struct SourceSelectionView: View {
                             shouldShowCamera: $shouldShowCamera)
         }
     }
-    
+
 }

@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct CameraView: View {
-    
+
     @Binding var selectedPhoto: UIImage?
     @Binding var shouldShowCamera: Bool
-    
-    var body: some View{
+
+    var body: some View {
         if let selectedPhoto {
-            HStack{
+            HStack {
                 Image(uiImage: selectedPhoto)
                     .resizable()
                     .scaledToFit()
@@ -29,7 +29,7 @@ struct CameraView: View {
                 }
 
             }
-            
+
         }
         Button {
             shouldShowCamera.toggle()

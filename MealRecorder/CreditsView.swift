@@ -7,17 +7,17 @@
 
 import SwiftUI
 
-struct CreditsView : View {
-    var body: some View{
-        ScrollView{
-            VStack{
+struct CreditsView: View {
+    var body: some View {
+        ScrollView {
+            VStack {
                 Text("Credits")
                     .font(.largeTitle)
                     .bold()
                     .padding(.all)
                 Link("AlertKit By Rebeloper", destination: URL(string: "https://github.com/rebeloper/AlertKit")!)
                     .tint(Color.blue)
-                Text("THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.")
+                Text(licenseText)
                     .padding(.all)
                     .font(.footnote)
                 Link("Food Image By BomSymbols", destination: URL(string: "https://www.iconfinder.com/korawan_m")!)
@@ -28,8 +28,15 @@ struct CreditsView : View {
     }
 }
 
-struct CreditsView_Previews : PreviewProvider{
-    static var previews: some View{
+struct CreditsView_Previews: PreviewProvider {
+    static var previews: some View {
         CreditsView()
     }
 }
+
+let licenseText = "THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING " +
+"BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, " +
+"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT." +
+" IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY," +
+" WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR " +
+"IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."

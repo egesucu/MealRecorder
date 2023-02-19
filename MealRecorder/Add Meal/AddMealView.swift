@@ -9,40 +9,40 @@ import SwiftUI
 import AlertKit
 import PhotosUI
 
-enum CameraSourceType: Hashable{
-    case camera,library
+enum CameraSourceType: Hashable {
+    case camera, library
 }
 
-enum ActiveSheets: Identifiable{
-    case photo,location
-    
+enum ActiveSheets: Identifiable {
+    case photo, location
+
     var id: Int {
         hashValue
     }
 }
 
 struct AddMealView: View {
-    
+
     @StateObject var addMealViewModel = AddMealViewModel()
     @StateObject var customAlertManager = CustomAlertManager()
-    
+
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var context
-    
+
     var mealDataManager: MealDataManager
-    
+
     var body: some View {
-        
+
         NavigationStack {
-            Form{
-                if !addMealViewModel.meals.isEmpty{
+            Form {
+                if !addMealViewModel.meals.isEmpty {
                     Section {
                         MealItemListView(meals: $addMealViewModel.meals)
                     } header: {
                         Text("Meals")
                     }
                 }
-                
+
                 Section {
                     Button {
                         customAlertManager.show()
@@ -51,7 +51,7 @@ struct AddMealView: View {
                     }
 
                 }
-                
+
                 Section {
                     HStack {
                         Button {
@@ -59,7 +59,7 @@ struct AddMealView: View {
                         } label: {
                             Image(systemName: "mappin.circle.fill")
                         }
-                        TextField("Meal Location",text: $addMealViewModel.location, prompt: Text("Meal Location"))
+                        TextField("Meal Location", text: $addMealViewModel.location, prompt: Text("Meal Location"))
                     }
                     DatePicker("Date", selection: $addMealViewModel.date)
                 } header: {
@@ -75,13 +75,13 @@ struct AddMealView: View {
                 }
 
                 Section {
-                    PhotosPicker(selection: $addMealViewModel.selectedImage, matching: .images, photoLibrary: .shared()){
+                    PhotosPicker(selection: $addMealViewModel.selectedImage, matching: .images, photoLibrary: .shared()) {
                         Text("Select an image")
                     }
                 }
 
                 if let selectedImageData = addMealViewModel.selectedImageData,
-                let uiImage = UIImage(data: selectedImageData){
+                let uiImage = UIImage(data: selectedImageData) {
                     Image(uiImage: uiImage)
                         .resizable()
                         .scaledToFit()
@@ -89,7 +89,7 @@ struct AddMealView: View {
                 }
             }
             .navigationTitle(Text("Add Meal"))
-            .toolbar{
+            .toolbar {
                 bottomToolbar()
             }
         }
@@ -101,7 +101,7 @@ struct AddMealView: View {
             }
         }
         .sheet(item: $addMealViewModel.activeSheet, content: { item in
-            switch item{
+            switch item {
             case .location:
                 SearchLocationView(addMealViewModel: addMealViewModel)
             case .photo:
@@ -132,13 +132,13 @@ struct AddMealView: View {
                 addMealViewModel.customAlertText = ""
             })
         ])
-        
+
     }
-    
+
     @ToolbarContentBuilder
-    func bottomToolbar() -> some ToolbarContent{
+    func bottomToolbar() -> some ToolbarContent {
         ToolbarItem(placement: .navigationBarLeading) {
-            Button{
+            Button {
                 dismiss()
             } label: {
                 Text("Cancel")
@@ -157,11 +157,11 @@ struct AddMealView: View {
             .disabled(addMealViewModel.meals.isEmpty)
         }
     }
-    
+
 }
 
-extension AddMealView{
-    func saveMeal(){
+extension AddMealView {
+    func saveMeal() {
         mealDataManager
             .addMeal(items: addMealViewModel.meals, date: addMealViewModel.date,
                      selectedLocation: addMealViewModel.selectedLocation,
@@ -171,8 +171,6 @@ extension AddMealView{
             dismiss()
     }
 }
-
-
 
 struct AddMealView_Previews: PreviewProvider {
     static var previews: some View {

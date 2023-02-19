@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct MealItemListView: View {
-    
+
     @Binding var meals: [String]
-    
+
     var body: some View {
         List {
             ForEach(meals, id: \.self) { item in
@@ -21,8 +21,8 @@ struct MealItemListView: View {
             .onDelete(perform: deleteMeal)
         }
     }
-    
-    func deleteMeal(at offsets: IndexSet){
+
+    func deleteMeal(at offsets: IndexSet) {
         meals.remove(atOffsets: offsets)
     }
 }
