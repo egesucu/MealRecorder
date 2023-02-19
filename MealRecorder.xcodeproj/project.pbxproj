@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9D1E5AF929A256510067DFA1 /* AlertKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9D1E5AF829A256510067DFA1 /* AlertKit */; };
 		9D3C654028F329A000930F84 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3C653F28F329A000930F84 /* ImagePicker.swift */; };
 		9D471C92271C751A002641E9 /* MealListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D471C91271C751A002641E9 /* MealListView.swift */; };
 		9D471C94271C8054002641E9 /* MealCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D471C93271C8054002641E9 /* MealCell.swift */; };
 		9D471C96271C8468002641E9 /* AddMealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D471C95271C8468002641E9 /* AddMealView.swift */; };
-		9D4ECE76295F31DB00F7DC9F /* AlertKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9D4ECE75295F31DB00F7DC9F /* AlertKit */; };
 		9D7C862C2997EC76009FD311 /* AddMealViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7C862B2997EC76009FD311 /* AddMealViewModel.swift */; };
 		9D88309528F1D6D300320F98 /* CreditsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D88309428F1D6D300320F98 /* CreditsView.swift */; };
 		9D88309728F1D8A200320F98 /* DateUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D88309628F1D8A200320F98 /* DateUtility.swift */; };
@@ -62,7 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9D4ECE76295F31DB00F7DC9F /* AlertKit in Frameworks */,
+				9D1E5AF929A256510067DFA1 /* AlertKit in Frameworks */,
 				9DD8CD27271B06C700FCF1ED /* HealthKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -173,7 +173,7 @@
 			);
 			name = MealRecorder;
 			packageProductDependencies = (
-				9D4ECE75295F31DB00F7DC9F /* AlertKit */,
+				9D1E5AF829A256510067DFA1 /* AlertKit */,
 			);
 			productName = MealRecorder;
 			productReference = 9DD8CD0A271AEFBD00FCF1ED /* MealRecorder.app */;
@@ -204,7 +204,7 @@
 			);
 			mainGroup = 9DD8CD01271AEFBD00FCF1ED;
 			packageReferences = (
-				9D4ECE74295F31DB00F7DC9F /* XCRemoteSwiftPackageReference "AlertKit" */,
+				9D1E5AF729A256510067DFA1 /* XCRemoteSwiftPackageReference "AlertKit" */,
 			);
 			productRefGroup = 9DD8CD0B271AEFBD00FCF1ED /* Products */;
 			projectDirPath = "";
@@ -494,7 +494,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		9D4ECE74295F31DB00F7DC9F /* XCRemoteSwiftPackageReference "AlertKit" */ = {
+		9D1E5AF729A256510067DFA1 /* XCRemoteSwiftPackageReference "AlertKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rebeloper/AlertKit";
 			requirement = {
@@ -505,9 +505,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		9D4ECE75295F31DB00F7DC9F /* AlertKit */ = {
+		9D1E5AF829A256510067DFA1 /* AlertKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9D4ECE74295F31DB00F7DC9F /* XCRemoteSwiftPackageReference "AlertKit" */;
+			package = 9D1E5AF729A256510067DFA1 /* XCRemoteSwiftPackageReference "AlertKit" */;
 			productName = AlertKit;
 		};
 /* End XCSwiftPackageProductDependency section */
