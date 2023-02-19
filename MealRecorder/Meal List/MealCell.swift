@@ -24,7 +24,7 @@ struct MealCell: View {
                 if let location = meal.selectedLocation {
                     Map(
                         coordinateRegion: $locationRegion,
-                        annotationItems: [location],
+                        interactionModes: [], annotationItems: [location],
                         annotationContent: { _ in
                             MapMarker(coordinate: locationCoordination)
 
