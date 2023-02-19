@@ -12,13 +12,13 @@ import PhotosUI
 class AddMealViewModel: ObservableObject{
     
     @Published var location = ""
-    @Published var date = Date()
+    @Published var date : Date = .now
     @Published var photoNeed = false
     @Published var selectedImage: PhotosPickerItem?
-    @Published var selectedImageData: Data? = nil
-    @Published var selectedLocation: MapItem? = .init(item: .init())
+    @Published var selectedImageData: Data?
+    @Published var selectedLocation: MapItem?
     @Published var meals: [String] = []
-    @Published var customAlertText: String = ""
+    @Published var customAlertText = ""
     @Published var activeSheet : ActiveSheets?
     
     func updateLocation(location: MapItem) {

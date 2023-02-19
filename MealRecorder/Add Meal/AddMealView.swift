@@ -101,14 +101,12 @@ struct AddMealView: View {
             }
         }
         .sheet(item: $addMealViewModel.activeSheet, content: { item in
-            if let item{
-                switch item{
-                case .location:
-                    SearchLocationView(addMealViewModel: addMealViewModel)
-                case .photo:
-                    ImagePickerView(selectedImageData: $addMealViewModel.selectedImageData)
-                        .ignoresSafeArea()
-                }
+            switch item{
+            case .location:
+                SearchLocationView(addMealViewModel: addMealViewModel)
+            case .photo:
+                ImagePickerView(selectedImageData: $addMealViewModel.selectedImageData)
+                    .ignoresSafeArea()
             }
         })
         .customAlert(manager: customAlertManager, content: {
