@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum MealFilter: String, CaseIterable{
+enum MealFilter: String, CaseIterable {
     case all = "All"
     case today = "Today"
     case thisWeek = "Weekly"
@@ -15,28 +15,28 @@ enum MealFilter: String, CaseIterable{
 }
 
 struct MealListView: View {
-    
+
     @Environment(\.managedObjectContext) var context
     @FetchRequest(entity: Meal.entity(),
                   sortDescriptors: [
                     NSSortDescriptor(keyPath: \Meal.date, ascending: false)],
                   animation: .easeInOut)
     var meals: FetchedResults<Meal>
-    @State private var filteredMeals : [Meal] = []
-    
+    @State private var filteredMeals: [Meal] = []
+
     @State private var showAddMeal = false
     @State private var selection = Set<Meal>()
     @State private var isEditMode: EditMode = .inactive
     @State private var showMoreItems = false
-    @State private var filter : MealFilter = .all
-    
+    @State private var filter: MealFilter = .all
+
     let mealDataManager = MealDataManager.shared
-    
-    var body: some View{
-        NavigationView{
-            ZStack(alignment: .bottom){
-                VStack{
-                    ShowView()
+
+    var body: some View {
+        NavigationView {
+            ZStack(alignment: .bottom) {
+                VStack {
+                    showView()
                         .toolbar {
                             Menu(content: {
                                 Picker("Destination", selection: $filter) {
@@ -46,7 +46,7 @@ struct MealListView: View {
                                 }
                             }, label: {
                                 Text(filter.rawValue).bold()
-                                
+
                             })
                             .disabled(meals.count == 0)
                             EditButton()
@@ -60,7 +60,7 @@ struct MealListView: View {
                     Image(systemName: "plus.circle.fill")
                         .font(.system(size: 50))
                         .symbolRenderingMode(.palette)
-                        .foregroundStyle(Color(.systemBackground),.orange)
+                        .foregroundStyle(Color(.systemBackground), .orange)
                 }
 
             }
@@ -68,9 +68,9 @@ struct MealListView: View {
                 filterMeals()
                 }, content: {
                     AddMealView(mealDataManager: mealDataManager)
-                        .environment(\.managedObjectContext,context)
+                        .environment(\.managedObjectContext, context)
             })
-            
+
         }
         .onAppear(perform: {
             context.refreshAllObjects()
@@ -81,9 +81,9 @@ struct MealListView: View {
         })
         .navigationViewStyle(.stack)
     }
-    
+
     @ViewBuilder
-    func ShowView() -> some View {
+    func showView() -> some View {
         if filteredMeals.count == 0 {
             VStack {
                 Text("No meal is added.").bold()
@@ -92,7 +92,7 @@ struct MealListView: View {
             List(selection: $selection) {
                 ForEach(filteredMeals) { meal in
                     MealCell(meal: meal)
-                        .padding(.bottom,10)
+                        .padding(.bottom, 10)
                 }
                 .onDelete(perform: deleteMeal)
                 .listRowBackground(Color.clear)
@@ -103,16 +103,15 @@ struct MealListView: View {
                 context.refreshAllObjects()
                 filterMeals()
             }
-            
+
         }
     }
-    
-    func filterMeals(){
+
+    func filterMeals() {
         filteredMeals = mealDataManager.filterMeals(meals: meals, filter: filter)
     }
-    
 
-    func deleteMeal(at offsets: IndexSet){
+    func deleteMeal(at offsets: IndexSet) {
         mealDataManager.deleteMeal(context: context, meals: filteredMeals, at: offsets)
         filterMeals()
     }
@@ -123,4 +122,3 @@ struct MealList_Previews: PreviewProvider {
         MealListView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }
-

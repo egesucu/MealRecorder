@@ -17,7 +17,7 @@ struct PersistenceController {
         for _ in 0..<5 {
             let meal = Meal(context: viewContext)
             meal.id = UUID()
-            meal.items = ["Cake","Burger"]
+            meal.items = ["Cake", "Burger"]
             meal.date = Date.now
             meal.image = UIImage(named: "no-meal-photo")?.jpegData(compressionQuality: 0.8)
             let demoLocation = Location(context: viewContext)
@@ -29,7 +29,7 @@ struct PersistenceController {
         for _ in 0..<5 {
             let meal = Meal(context: viewContext)
             meal.id = UUID()
-            meal.items = ["Cake","Burger"]
+            meal.items = ["Cake", "Burger"]
             meal.image = UIImage(named: "no-meal-photo")?.jpegData(compressionQuality: 0.8)
             let demoLocation = Location(context: viewContext)
             demoLocation.name = "Starbucks"
@@ -38,7 +38,7 @@ struct PersistenceController {
             meal.selectedLocation = demoLocation
             meal.date = Date().addingTimeInterval(24*60*6)
         }
-        
+
         save(context: viewContext)
         return result
     }()
@@ -50,15 +50,15 @@ struct PersistenceController {
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+        container.loadPersistentStores(completionHandler: { (_, error) in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
     }
-    
-    static func save(context: NSManagedObjectContext){
-        do{
+
+    static func save(context: NSManagedObjectContext) {
+        do {
             try context.save()
         } catch let error {
             print(error.localizedDescription)
