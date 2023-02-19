@@ -61,8 +61,18 @@ struct MealCell: View {
                 .background(.white)
                 .cornerRadius(10)
                 if let date = meal.date {
-                    Text(date.formatted())
-                        .bold()
+                    if Calendar.current.isDateInToday(date) {
+                        HStack(alignment: .center, spacing: 0) {
+                            Text("Today at: ")
+                            Text(date.formatted(.dateTime.hour().minute()))
+                                .bold()
+                        }
+
+                    } else {
+                        Text(date.formatted())
+                            .bold()
+                    }
+
                 }
 
             }
