@@ -43,7 +43,6 @@ struct MealDataManager {
 
     func addMeal(items: [String], date: Date,
                  selectedLocation: MapItem?,
-                 selectedImageData: Data?,
                  context: NSManagedObjectContext) {
         let meal = Meal(context: context)
         meal.id = UUID()
@@ -51,14 +50,10 @@ struct MealDataManager {
         meal.date = date
         if let selectedLocation {
             let location = Location(context: context)
-            location.name = selectedLocation.item.placemark.name ?? ""
+            location.name = selectedLocation.item.placemark.name
             location.latitude = selectedLocation.item.placemark.coordinate.latitude
             location.longitude = selectedLocation.item.placemark.coordinate.longitude
             meal.selectedLocation = location
-
-        }
-        if let selectedImageData {
-            meal.image = selectedImageData
         }
         PersistenceController.save(context: context)
     }

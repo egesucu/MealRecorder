@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		9D1E5AF929A256510067DFA1 /* AlertKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9D1E5AF829A256510067DFA1 /* AlertKit */; };
-		9D3C654028F329A000930F84 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3C653F28F329A000930F84 /* ImagePicker.swift */; };
 		9D471C92271C751A002641E9 /* MealListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D471C91271C751A002641E9 /* MealListView.swift */; };
 		9D471C94271C8054002641E9 /* MealCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D471C93271C8054002641E9 /* MealCell.swift */; };
 		9D471C96271C8468002641E9 /* AddMealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D471C95271C8468002641E9 /* AddMealView.swift */; };
@@ -16,11 +15,6 @@
 		9D88309528F1D6D300320F98 /* CreditsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D88309428F1D6D300320F98 /* CreditsView.swift */; };
 		9D88309728F1D8A200320F98 /* DateUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D88309628F1D8A200320F98 /* DateUtility.swift */; };
 		9D904DEA296757B200D6A2AF /* MealDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D904DE9296757B200D6A2AF /* MealDataManager.swift */; };
-		9D904DED296773B200D6A2AF /* SourceSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D904DEC296773B200D6A2AF /* SourceSelectionView.swift */; };
-		9D904DEF296773C400D6A2AF /* ImageSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D904DEE296773C400D6A2AF /* ImageSourceView.swift */; };
-		9D904DF1296773D200D6A2AF /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D904DF0296773D200D6A2AF /* ImageView.swift */; };
-		9D904DF3296773EB00D6A2AF /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D904DF2296773EB00D6A2AF /* CameraView.swift */; };
-		9D904DF52967740B00D6A2AF /* LocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D904DF42967740B00D6A2AF /* LocationView.swift */; };
 		9D904DF72967742000D6A2AF /* MealItemListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D904DF62967742000D6A2AF /* MealItemListView.swift */; };
 		9DD7039F293B8EDF00F766DB /* SearchLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DD7039E293B8EDF00F766DB /* SearchLocationView.swift */; };
 		9DD8CD0E271AEFBD00FCF1ED /* MealRecorderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DD8CD0D271AEFBD00FCF1ED /* MealRecorderApp.swift */; };
@@ -28,11 +22,9 @@
 		9DD8CD15271AEFBF00FCF1ED /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9DD8CD14271AEFBF00FCF1ED /* Preview Assets.xcassets */; };
 		9DD8CD17271AEFBF00FCF1ED /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DD8CD16271AEFBF00FCF1ED /* Persistence.swift */; };
 		9DD8CD1A271AEFBF00FCF1ED /* MealRecorder.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9DD8CD18271AEFBF00FCF1ED /* MealRecorder.xcdatamodeld */; };
-		9DD8CD27271B06C700FCF1ED /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DD8CD26271B06C700FCF1ED /* HealthKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9D3C653F28F329A000930F84 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		9D471C91271C751A002641E9 /* MealListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealListView.swift; sourceTree = "<group>"; };
 		9D471C93271C8054002641E9 /* MealCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealCell.swift; sourceTree = "<group>"; };
 		9D471C95271C8468002641E9 /* AddMealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMealView.swift; sourceTree = "<group>"; };
@@ -40,11 +32,6 @@
 		9D88309428F1D6D300320F98 /* CreditsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsView.swift; sourceTree = "<group>"; };
 		9D88309628F1D8A200320F98 /* DateUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtility.swift; sourceTree = "<group>"; };
 		9D904DE9296757B200D6A2AF /* MealDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDataManager.swift; sourceTree = "<group>"; };
-		9D904DEC296773B200D6A2AF /* SourceSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceSelectionView.swift; sourceTree = "<group>"; };
-		9D904DEE296773C400D6A2AF /* ImageSourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSourceView.swift; sourceTree = "<group>"; };
-		9D904DF0296773D200D6A2AF /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
-		9D904DF2296773EB00D6A2AF /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
-		9D904DF42967740B00D6A2AF /* LocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationView.swift; sourceTree = "<group>"; };
 		9D904DF62967742000D6A2AF /* MealItemListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealItemListView.swift; sourceTree = "<group>"; };
 		9DB4114127A6EDD700E2DB60 /* MealRecorder.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MealRecorder.entitlements; sourceTree = "<group>"; };
 		9DD7039E293B8EDF00F766DB /* SearchLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchLocationView.swift; sourceTree = "<group>"; };
@@ -54,7 +41,6 @@
 		9DD8CD14271AEFBF00FCF1ED /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9DD8CD16271AEFBF00FCF1ED /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		9DD8CD19271AEFBF00FCF1ED /* MealRecorder.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MealRecorder.xcdatamodel; sourceTree = "<group>"; };
-		9DD8CD26271B06C700FCF1ED /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,7 +49,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D1E5AF929A256510067DFA1 /* AlertKit in Frameworks */,
-				9DD8CD27271B06C700FCF1ED /* HealthKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,16 +58,10 @@
 		9D904DEB2967738700D6A2AF /* Add Meal */ = {
 			isa = PBXGroup;
 			children = (
-				9D3C653F28F329A000930F84 /* ImagePicker.swift */,
 				9DD7039E293B8EDF00F766DB /* SearchLocationView.swift */,
 				9D471C95271C8468002641E9 /* AddMealView.swift */,
 				9D7C862B2997EC76009FD311 /* AddMealViewModel.swift */,
 				9D904DF62967742000D6A2AF /* MealItemListView.swift */,
-				9D904DF42967740B00D6A2AF /* LocationView.swift */,
-				9D904DF2296773EB00D6A2AF /* CameraView.swift */,
-				9D904DF0296773D200D6A2AF /* ImageView.swift */,
-				9D904DEE296773C400D6A2AF /* ImageSourceView.swift */,
-				9D904DEC296773B200D6A2AF /* SourceSelectionView.swift */,
 			);
 			path = "Add Meal";
 			sourceTree = "<group>";
@@ -111,7 +90,6 @@
 			children = (
 				9DD8CD0C271AEFBD00FCF1ED /* MealRecorder */,
 				9DD8CD0B271AEFBD00FCF1ED /* Products */,
-				9DD8CD25271B06C700FCF1ED /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -145,14 +123,6 @@
 				9DD8CD14271AEFBF00FCF1ED /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		9DD8CD25271B06C700FCF1ED /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				9DD8CD26271B06C700FCF1ED /* HealthKit.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -255,22 +225,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				9DD8CD17271AEFBF00FCF1ED /* Persistence.swift in Sources */,
-				9D904DF52967740B00D6A2AF /* LocationView.swift in Sources */,
 				9DD7039F293B8EDF00F766DB /* SearchLocationView.swift in Sources */,
-				9D904DED296773B200D6A2AF /* SourceSelectionView.swift in Sources */,
-				9D904DF3296773EB00D6A2AF /* CameraView.swift in Sources */,
 				9D88309528F1D6D300320F98 /* CreditsView.swift in Sources */,
 				9D471C94271C8054002641E9 /* MealCell.swift in Sources */,
-				9D3C654028F329A000930F84 /* ImagePicker.swift in Sources */,
 				9DD8CD1A271AEFBF00FCF1ED /* MealRecorder.xcdatamodeld in Sources */,
 				9D7C862C2997EC76009FD311 /* AddMealViewModel.swift in Sources */,
 				9D904DF72967742000D6A2AF /* MealItemListView.swift in Sources */,
 				9D471C92271C751A002641E9 /* MealListView.swift in Sources */,
 				9DD8CD0E271AEFBD00FCF1ED /* MealRecorderApp.swift in Sources */,
-				9D904DEF296773C400D6A2AF /* ImageSourceView.swift in Sources */,
 				9D904DEA296757B200D6A2AF /* MealDataManager.swift in Sources */,
 				9D88309728F1D8A200320F98 /* DateUtility.swift in Sources */,
-				9D904DF1296773D200D6A2AF /* ImageView.swift in Sources */,
 				9D471C96271C8468002641E9 /* AddMealView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

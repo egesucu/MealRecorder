@@ -19,7 +19,6 @@ struct PersistenceController {
             meal.id = UUID()
             meal.items = ["Cake", "Burger"]
             meal.date = Date.now
-            meal.image = UIImage(named: "no-meal-photo")?.jpegData(compressionQuality: 0.8)
             let demoLocation = Location(context: viewContext)
             demoLocation.name = "Starbucks"
             demoLocation.latitude = 41.032464900467325
@@ -30,7 +29,6 @@ struct PersistenceController {
             let meal = Meal(context: viewContext)
             meal.id = UUID()
             meal.items = ["Cake", "Burger"]
-            meal.image = UIImage(named: "no-meal-photo")?.jpegData(compressionQuality: 0.8)
             let demoLocation = Location(context: viewContext)
             demoLocation.name = "Starbucks"
             demoLocation.latitude = 41.032464900467325
