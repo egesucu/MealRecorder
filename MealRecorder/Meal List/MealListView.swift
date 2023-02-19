@@ -34,36 +34,43 @@ struct MealListView: View {
 
     var body: some View {
         NavigationView {
-            ZStack(alignment: .bottom) {
-                VStack {
-                    showView()
-                        .toolbar {
-                            Menu(content: {
-                                Picker("Destination", selection: $filter) {
-                                    ForEach(MealFilter.allCases, id: \.self) {
-                                        Text($0.rawValue)
-                                    }
-                                }
-                            }, label: {
-                                Text(filter.rawValue).bold()
-
-                            })
-                            .disabled(meals.count == 0)
-                            EditButton()
-                                .disabled(meals.count == 0)
+            ZStack {
+                Color(.systemGroupedBackground).ignoresSafeArea(.all)
+                ZStack(alignment: .bottom) {
+                    VStack {
+                        showView()
+                    }
+                    VStack {
+                        Spacer()
+                        Button {
+                            showAddMeal.toggle()
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.system(size: 50))
+                                .symbolRenderingMode(.palette)
+                                .foregroundStyle(Color(.systemGroupedBackground), .orange)
                         }
-                        .navigationTitle(Text("Meals"))
-                }
-                Button {
-                    showAddMeal.toggle()
-                } label: {
-                    Image(systemName: "plus.circle.fill")
-                        .font(.system(size: 50))
-                        .symbolRenderingMode(.palette)
-                        .foregroundStyle(Color(.systemBackground), .orange)
-                }
+                    }
 
+                }
             }
+
+            .toolbar {
+                Menu(content: {
+                    Picker("Destination", selection: $filter) {
+                        ForEach(MealFilter.allCases, id: \.self) {
+                            Text($0.rawValue)
+                        }
+                    }
+                }, label: {
+                    Text(filter.rawValue).bold()
+
+                })
+                .disabled(meals.count == 0)
+                EditButton()
+                    .disabled(meals.count == 0)
+            }
+            .navigationTitle(Text("Meals"))
             .sheet(isPresented: $showAddMeal, onDismiss: {
                 filterMeals()
                 }, content: {
@@ -72,6 +79,7 @@ struct MealListView: View {
             })
 
         }
+        .background(Color(.systemGroupedBackground), ignoresSafeAreaEdges: .all)
         .onAppear(perform: {
             context.refreshAllObjects()
             filterMeals()
@@ -86,7 +94,10 @@ struct MealListView: View {
     func showView() -> some View {
         if filteredMeals.count == 0 {
             VStack {
-                Text("No meal is added.").bold()
+                Spacer()
+                Text("No meal is added.")
+                    .bold()
+                Spacer()
             }
         } else {
             List(selection: $selection) {
