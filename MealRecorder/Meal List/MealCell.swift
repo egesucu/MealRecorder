@@ -10,10 +10,10 @@ import MapKit
 
 struct MealCell: View {
 
-    var meal: Meal
     @State private var locationRegion: MKCoordinateRegion = .init()
-    let locationSpan = MKCoordinateSpan(latitudeDelta: 0.0005, longitudeDelta: 0.0005)
     @State private var locationCoordination = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    let locationSpan = MKCoordinateSpan(latitudeDelta: 0.0005, longitudeDelta: 0.0005)
+    var meal: Meal
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -22,62 +22,18 @@ struct MealCell: View {
                 .shadow(color: .gray, radius: 4)
             VStack(alignment: .center) {
                 if let location = meal.selectedLocation {
-                    Map(
-                        coordinateRegion: $locationRegion,
-                        interactionModes: [], annotationItems: [location],
-                        annotationContent: { _ in
-                            MapMarker(coordinate: locationCoordination)
-
-                    })
-                    .onChange(of: locationRegion.center.latitude, perform: { _ in
-                        updateLocation()
-                    })
-                    .frame(height: 110)
-                    .cornerRadius(10, corners: [.topLeft, .topRight])
-                    .onTapGesture {
-                        let url = URL(string: "maps://?saddr=&daddr=\(location.latitude),\(location.longitude)")
-                        if let url {
-                            if UIApplication.shared.canOpenURL(url) {
-                                UIApplication.shared.open(url)
-                            }
-                        }
-                    }
-
+                    mealCellLocationView(location: location)
                 }
-
                 Text(meal.mealType.text())
                     .font(.title)
                     .multilineTextAlignment(.center)
-
-                VStack(alignment: .leading) {
-                    ForEach(meal.items ?? [""], id: \.self) { item in
-                        HStack {
-                            Label(item, systemImage: "largecircle.fill.circle")
-                                .padding(.bottom, 3)
-                        }
-                    }
-                }
-                .padding(.all)
-                .background(.white)
-                .cornerRadius(10)
+                mealCellItemsView()
                 if let date = meal.date {
-                    if Calendar.current.isDateInToday(date) {
-                        HStack(alignment: .center, spacing: 0) {
-                            Text("Today at: ")
-                            Text(date.formatted(.dateTime.hour().minute()))
-                                .bold()
-                        }
-
-                    } else {
-                        Text(date.formatted())
-                            .bold()
-                    }
-
+                    mealCellDateLabelView(date: date)
                 }
-
             }
-        }.onAppear(perform: updateLocation)
-
+        }
+        .onAppear(perform: updateLocation)
     }
 
     func updateLocation() {
@@ -88,19 +44,74 @@ struct MealCell: View {
         }
     }
 
+    func openLocationInMaps() {
+        if let location = meal.selectedLocation {
+            let url = URL(string: "maps://?saddr=&daddr=\(location.latitude),\(location.longitude)")
+            if let url {
+                if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url)
+                }
+            }
+        }
+    }
+
+}
+
+// MARK: - View Builders
+extension MealCell {
+    @ViewBuilder
+    func mealCellItemsView() -> some View {
+        VStack(alignment: .leading) {
+            ForEach(meal.items ?? [""], id: \.self) { item in
+                HStack {
+                    Label(item, systemImage: "largecircle.fill.circle")
+                        .padding(.bottom, 3)
+                }
+            }
+        }
+        .padding(.all)
+        .background(.white)
+        .cornerRadius(10)
+    }
+
+    @ViewBuilder
+    func mealCellLocationView(location: Location) -> some View {
+        Map(
+            coordinateRegion: $locationRegion,
+            interactionModes: [], annotationItems: [location],
+            annotationContent: { _ in
+                MapMarker(coordinate: locationCoordination)
+
+            })
+        .onChange(of: locationRegion.center.latitude, perform: { _ in
+            updateLocation()
+        })
+        .frame(height: 110)
+        .cornerRadius(10, corners: [.topLeft, .topRight])
+        .onTapGesture(perform: openLocationInMaps)
+    }
+
+    @ViewBuilder
+    func mealCellDateLabelView(date: Date) -> some View {
+        if Calendar.current.isDateInToday(date) {
+            HStack(alignment: .center, spacing: 0) {
+                Text("Today at: ")
+                Text(date.formatted(.dateTime.hour().minute()))
+                    .bold()
+            }
+
+        } else {
+            Text(date.formatted())
+                .bold()
+        }
+    }
 }
 
 struct MealCell_Previews: PreviewProvider {
     static var previews: some View {
 
-        let meal = Meal(context: PersistenceController.preview.container.viewContext)
-        meal.items = ["Cake", "Burger"]
-        meal.date = Date.now
-        let demoLocation = Location(context: PersistenceController.preview.container.viewContext)
-        demoLocation.name = "Starbucks"
-        demoLocation.latitude = 41.032464900467325
-        demoLocation.longitude = 28.964352429812604
-        meal.selectedLocation = demoLocation
+        var meal = Meal(context: PersistenceController.preview.container.viewContext)
+        PersistenceController.createMockup(meal: &meal)
 
         return Group {
             MealCell(meal: meal)
@@ -108,7 +119,6 @@ struct MealCell_Previews: PreviewProvider {
                 .padding()
                 .previewLayout(.sizeThatFits)
         }
-
     }
 }
 
@@ -119,13 +129,12 @@ extension View {
 }
 
 struct RoundedCorner: Shape {
-
     var radius: CGFloat = .infinity
     var corners: UIRectCorner = .allCorners
-
     func path(in rect: CGRect) -> Path {
         let path = UIBezierPath(roundedRect: rect,
-                                byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+                                byRoundingCorners: corners,
+                                cornerRadii: CGSize(width: radius, height: radius))
         return Path(path.cgPath)
     }
 }
