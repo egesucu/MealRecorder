@@ -6,7 +6,6 @@
 //
 
 import CoreData
-import UIKit
 
 struct PersistenceController {
     static let shared = PersistenceController()
@@ -22,18 +21,17 @@ struct PersistenceController {
         }
         (1...5).forEach { _ in
             var meal = Meal(context: viewContext)
-            PersistenceController.createMockup(meal: &meal)
-            meal.date = Date().addingTimeInterval(24*60*6)
+            PersistenceController.createMockup(meal: &meal, date: .now.addingTimeInterval(24*60*6))
         }
 
         save(context: viewContext)
         return result
     }()
 
-    static func createMockup(meal: inout Meal) {
+    static func createMockup(meal: inout Meal, date: Date = .now) {
         meal.id = UUID()
         meal.items = ["Cake", "Burger"]
-        meal.date = .now
+        meal.date = date
         let demoLocation = Location(context: PersistenceController.preview.container.viewContext)
         demoLocation.name = "Coffee House"
         (demoLocation.latitude, demoLocation.longitude) = (41.032464900467325, 28.964352429812604)

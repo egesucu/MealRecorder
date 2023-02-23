@@ -12,6 +12,8 @@ struct MealCell: View {
 
     @State private var locationRegion: MKCoordinateRegion = .init()
     @State private var locationCoordination = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    @State private var showError = false
+    @State private var alertMessage = ""
     let locationSpan = MKCoordinateSpan(latitudeDelta: 0.0005, longitudeDelta: 0.0005)
     var meal: Meal
 
@@ -33,6 +35,7 @@ struct MealCell: View {
                 }
             }
         }
+        .alert(isPresented: $showError, content: showGenericError)
         .onAppear(perform: updateLocation)
     }
 
@@ -45,13 +48,12 @@ struct MealCell: View {
     }
 
     func openLocationInMaps() {
-        if let location = meal.selectedLocation {
-            let url = URL(string: "maps://?saddr=&daddr=\(location.latitude),\(location.longitude)")
-            if let url {
-                if UIApplication.shared.canOpenURL(url) {
-                    UIApplication.shared.open(url)
-                }
-            }
+        if let location = meal.selectedLocation,
+           let url = URL(string: "maps://?saddr=&daddr=\(location.latitude),\(location.longitude)"),
+           UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        } else {
+            alertMessage = "We can't open the map."
         }
     }
 
@@ -59,13 +61,18 @@ struct MealCell: View {
 
 // MARK: - View Builders
 extension MealCell {
+    func showGenericError() -> SwiftUI.Alert {
+        Alert(title: Text("Error"), message: Text(alertMessage))
+    }
     @ViewBuilder
     func mealCellItemsView() -> some View {
         VStack(alignment: .leading) {
-            ForEach(meal.items ?? [""], id: \.self) { item in
-                HStack {
-                    Label(item, systemImage: "largecircle.fill.circle")
-                        .padding(.bottom, 3)
+            if let items = meal.items {
+                ForEach(items, id: \.self) { item in
+                    HStack {
+                        Label(item, systemImage: "largecircle.fill.circle")
+                            .padding(.bottom, 3)
+                    }
                 }
             }
         }
@@ -83,9 +90,7 @@ extension MealCell {
                 MapMarker(coordinate: locationCoordination)
 
             })
-        .onChange(of: locationRegion.center.latitude, perform: { _ in
-            updateLocation()
-        })
+        .onChange(of: locationRegion.center.latitude, perform: { _ in updateLocation()})
         .frame(height: 110)
         .cornerRadius(10, corners: [.topLeft, .topRight])
         .onTapGesture(perform: openLocationInMaps)
@@ -119,22 +124,5 @@ struct MealCell_Previews: PreviewProvider {
                 .padding()
                 .previewLayout(.sizeThatFits)
         }
-    }
-}
-
-extension View {
-    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape( RoundedCorner(radius: radius, corners: corners) )
-    }
-}
-
-struct RoundedCorner: Shape {
-    var radius: CGFloat = .infinity
-    var corners: UIRectCorner = .allCorners
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect,
-                                byRoundingCorners: corners,
-                                cornerRadii: CGSize(width: radius, height: radius))
-        return Path(path.cgPath)
     }
 }

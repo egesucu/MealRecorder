@@ -12,11 +12,17 @@
 		9D471C92271C751A002641E9 /* MealListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D471C91271C751A002641E9 /* MealListView.swift */; };
 		9D471C94271C8054002641E9 /* MealCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D471C93271C8054002641E9 /* MealCell.swift */; };
 		9D471C96271C8468002641E9 /* AddMealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D471C95271C8468002641E9 /* AddMealView.swift */; };
+		9D57C06129A7AB420037E3F3 /* ActiveSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D57C06029A7AB420037E3F3 /* ActiveSheets.swift */; };
+		9D57C06329A7AB620037E3F3 /* CameraSourceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D57C06229A7AB620037E3F3 /* CameraSourceType.swift */; };
 		9D7AB66429A2948400164C88 /* MealFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7AB66329A2948400164C88 /* MealFilter.swift */; };
 		9D7AB66629A294BC00164C88 /* MealListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7AB66529A294BC00164C88 /* MealListViewModel.swift */; };
 		9D7C862C2997EC76009FD311 /* AddMealViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7C862B2997EC76009FD311 /* AddMealViewModel.swift */; };
 		9D88309528F1D6D300320F98 /* CreditsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D88309428F1D6D300320F98 /* CreditsView.swift */; };
 		9D88309728F1D8A200320F98 /* DateUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D88309628F1D8A200320F98 /* DateUtility.swift */; };
+		9D8ADFB029A79FC700D8DD64 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8ADFAF29A79FC700D8DD64 /* ViewExtensions.swift */; };
+		9D8ADFB429A7A01700D8DD64 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8ADFB329A7A01700D8DD64 /* RoundedCorner.swift */; };
+		9D8ADFB829A7A30600D8DD64 /* SearchLocationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8ADFB729A7A30600D8DD64 /* SearchLocationViewModel.swift */; };
+		9D8ADFBA29A7A47600D8DD64 /* MapItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8ADFB929A7A47600D8DD64 /* MapItem.swift */; };
 		9D904DEA296757B200D6A2AF /* MealDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D904DE9296757B200D6A2AF /* MealDataManager.swift */; };
 		9D904DF72967742000D6A2AF /* MealItemListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D904DF62967742000D6A2AF /* MealItemListView.swift */; };
 		9DD7039F293B8EDF00F766DB /* SearchLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DD7039E293B8EDF00F766DB /* SearchLocationView.swift */; };
@@ -32,11 +38,17 @@
 		9D471C91271C751A002641E9 /* MealListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealListView.swift; sourceTree = "<group>"; };
 		9D471C93271C8054002641E9 /* MealCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealCell.swift; sourceTree = "<group>"; };
 		9D471C95271C8468002641E9 /* AddMealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMealView.swift; sourceTree = "<group>"; };
+		9D57C06029A7AB420037E3F3 /* ActiveSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveSheets.swift; sourceTree = "<group>"; };
+		9D57C06229A7AB620037E3F3 /* CameraSourceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSourceType.swift; sourceTree = "<group>"; };
 		9D7AB66329A2948400164C88 /* MealFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealFilter.swift; sourceTree = "<group>"; };
 		9D7AB66529A294BC00164C88 /* MealListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealListViewModel.swift; sourceTree = "<group>"; };
 		9D7C862B2997EC76009FD311 /* AddMealViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMealViewModel.swift; sourceTree = "<group>"; };
 		9D88309428F1D6D300320F98 /* CreditsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsView.swift; sourceTree = "<group>"; };
 		9D88309628F1D8A200320F98 /* DateUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtility.swift; sourceTree = "<group>"; };
+		9D8ADFAF29A79FC700D8DD64 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
+		9D8ADFB329A7A01700D8DD64 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
+		9D8ADFB729A7A30600D8DD64 /* SearchLocationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchLocationViewModel.swift; sourceTree = "<group>"; };
+		9D8ADFB929A7A47600D8DD64 /* MapItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapItem.swift; sourceTree = "<group>"; };
 		9D904DE9296757B200D6A2AF /* MealDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDataManager.swift; sourceTree = "<group>"; };
 		9D904DF62967742000D6A2AF /* MealItemListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealItemListView.swift; sourceTree = "<group>"; };
 		9DB4114127A6EDD700E2DB60 /* MealRecorder.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MealRecorder.entitlements; sourceTree = "<group>"; };
@@ -61,12 +73,59 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9D8ADFAE29A79FB400D8DD64 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				9D3F632729A26D8A00C00DAD /* MealType+Extensions.swift */,
+				9D8ADFAF29A79FC700D8DD64 /* ViewExtensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		9D8ADFB229A7A00700D8DD64 /* Shapes */ = {
+			isa = PBXGroup;
+			children = (
+				9D8ADFB329A7A01700D8DD64 /* RoundedCorner.swift */,
+			);
+			path = Shapes;
+			sourceTree = "<group>";
+		};
+		9D8ADFB529A7A09100D8DD64 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9D88309428F1D6D300320F98 /* CreditsView.swift */,
+				9D904DEB2967738700D6A2AF /* Add Meal */,
+				9D904DF8296778CD00D6A2AF /* Meal List */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		9D8ADFB629A7A0AA00D8DD64 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				9D8ADFB729A7A30600D8DD64 /* SearchLocationViewModel.swift */,
+				9D7C862B2997EC76009FD311 /* AddMealViewModel.swift */,
+				9D7AB66529A294BC00164C88 /* MealListViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		9D8ADFBB29A7A48600D8DD64 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				9D57C06029A7AB420037E3F3 /* ActiveSheets.swift */,
+				9D57C06229A7AB620037E3F3 /* CameraSourceType.swift */,
+				9D7AB66329A2948400164C88 /* MealFilter.swift */,
+				9D8ADFB929A7A47600D8DD64 /* MapItem.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		9D904DEB2967738700D6A2AF /* Add Meal */ = {
 			isa = PBXGroup;
 			children = (
 				9DD7039E293B8EDF00F766DB /* SearchLocationView.swift */,
 				9D471C95271C8468002641E9 /* AddMealView.swift */,
-				9D7C862B2997EC76009FD311 /* AddMealViewModel.swift */,
 				9D904DF62967742000D6A2AF /* MealItemListView.swift */,
 			);
 			path = "Add Meal";
@@ -76,8 +135,6 @@
 			isa = PBXGroup;
 			children = (
 				9D471C91271C751A002641E9 /* MealListView.swift */,
-				9D7AB66529A294BC00164C88 /* MealListViewModel.swift */,
-				9D7AB66329A2948400164C88 /* MealFilter.swift */,
 				9D471C93271C8054002641E9 /* MealCell.swift */,
 			);
 			path = "Meal List";
@@ -86,10 +143,13 @@
 		9D904DF92967790E00D6A2AF /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				9D8ADFBB29A7A48600D8DD64 /* Models */,
+				9D8ADFB629A7A0AA00D8DD64 /* ViewModels */,
+				9D8ADFB229A7A00700D8DD64 /* Shapes */,
+				9D8ADFAE29A79FB400D8DD64 /* Extensions */,
 				9D904DE9296757B200D6A2AF /* MealDataManager.swift */,
 				9D88309628F1D8A200320F98 /* DateUtility.swift */,
 				9DD8CD16271AEFBF00FCF1ED /* Persistence.swift */,
-				9D3F632729A26D8A00C00DAD /* MealType+Extensions.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -113,11 +173,9 @@
 		9DD8CD0C271AEFBD00FCF1ED /* MealRecorder */ = {
 			isa = PBXGroup;
 			children = (
+				9D8ADFB529A7A09100D8DD64 /* Views */,
 				9DB4114127A6EDD700E2DB60 /* MealRecorder.entitlements */,
 				9DD8CD0D271AEFBD00FCF1ED /* MealRecorderApp.swift */,
-				9D904DF8296778CD00D6A2AF /* Meal List */,
-				9D904DEB2967738700D6A2AF /* Add Meal */,
-				9D88309428F1D6D300320F98 /* CreditsView.swift */,
 				9D904DF92967790E00D6A2AF /* Utilities */,
 				9DD8CD11271AEFBF00FCF1ED /* Assets.xcassets */,
 				9DD8CD18271AEFBF00FCF1ED /* MealRecorder.xcdatamodeld */,
@@ -224,7 +282,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nexport PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint --fix && swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nexport PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -238,15 +296,21 @@
 				9DD8CD17271AEFBF00FCF1ED /* Persistence.swift in Sources */,
 				9DD7039F293B8EDF00F766DB /* SearchLocationView.swift in Sources */,
 				9D88309528F1D6D300320F98 /* CreditsView.swift in Sources */,
+				9D57C06129A7AB420037E3F3 /* ActiveSheets.swift in Sources */,
 				9D471C94271C8054002641E9 /* MealCell.swift in Sources */,
 				9DD8CD1A271AEFBF00FCF1ED /* MealRecorder.xcdatamodeld in Sources */,
 				9D7C862C2997EC76009FD311 /* AddMealViewModel.swift in Sources */,
 				9D904DF72967742000D6A2AF /* MealItemListView.swift in Sources */,
+				9D8ADFBA29A7A47600D8DD64 /* MapItem.swift in Sources */,
 				9D471C92271C751A002641E9 /* MealListView.swift in Sources */,
+				9D8ADFB429A7A01700D8DD64 /* RoundedCorner.swift in Sources */,
+				9D8ADFB029A79FC700D8DD64 /* ViewExtensions.swift in Sources */,
 				9DD8CD0E271AEFBD00FCF1ED /* MealRecorderApp.swift in Sources */,
 				9D904DEA296757B200D6A2AF /* MealDataManager.swift in Sources */,
 				9D88309728F1D8A200320F98 /* DateUtility.swift in Sources */,
+				9D8ADFB829A7A30600D8DD64 /* SearchLocationViewModel.swift in Sources */,
 				9D471C96271C8468002641E9 /* AddMealView.swift in Sources */,
+				9D57C06329A7AB620037E3F3 /* CameraSourceType.swift in Sources */,
 				9D7AB66629A294BC00164C88 /* MealListViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
