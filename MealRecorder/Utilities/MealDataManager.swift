@@ -5,7 +5,6 @@
 //  Created by Ege Sucu on 5.01.2023.
 //
 
-import UIKit
 import SwiftUI
 import CoreData
 
@@ -34,27 +33,16 @@ struct MealDataManager {
         }
     }
 
-    func deleteMeal(context: NSManagedObjectContext, meals: [Meal], at offsets: IndexSet) {
-        for offset in offsets {
-            context.delete(meals[offset])
-            PersistenceController.save(context: context)
-        }
-    }
-
-    func addMeal(items: [String], date: Date,
-                 selectedLocation: MapItem?,
-                 context: NSManagedObjectContext,
-                 type: MealType) {
+    func addMeal(items: [String], date: Date, selectedLocation: MapItem?,
+                 context: NSManagedObjectContext, type: MealType) {
         let meal = Meal(context: context)
-        meal.id = UUID()
-        meal.items = items
-        meal.date = date
-        meal.mealType = type
+        (meal.id, meal.items, meal.date, meal.mealType) = (.init(), items, date, type)
         if let selectedLocation {
             let location = Location(context: context)
-            location.name = selectedLocation.item.placemark.name
-            location.latitude = selectedLocation.item.placemark.coordinate.latitude
-            location.longitude = selectedLocation.item.placemark.coordinate.longitude
+            let placemark = selectedLocation.item.placemark
+            location.name = placemark.name
+            location.latitude = placemark.coordinate.latitude
+            location.longitude = placemark.coordinate.longitude
             meal.selectedLocation = location
         }
         PersistenceController.save(context: context)

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 class AddMealViewModel: ObservableObject {
 
@@ -21,7 +22,18 @@ class AddMealViewModel: ObservableObject {
         self.selectedLocation = location
     }
 
-    func updateLocation(location: String) {
-        self.location = location
+    func saveMeal(model: MealListViewModel,
+                  context: NSManagedObjectContext,
+                  action: () -> Void) {
+        model.addMeal(items: meals, date: date,
+                     selectedLocation: selectedLocation,
+                     context: context,
+                     type: mealType)
+            action()
+    }
+
+    func addMeal() {
+        meals.append(customAlertText)
+        customAlertText = ""
     }
 }

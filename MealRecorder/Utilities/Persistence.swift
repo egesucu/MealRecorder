@@ -6,7 +6,6 @@
 //
 
 import CoreData
-import UIKit
 
 struct PersistenceController {
     static let shared = PersistenceController()
@@ -14,32 +13,30 @@ struct PersistenceController {
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        for _ in 0..<5 {
-            let meal = Meal(context: viewContext)
-            meal.id = UUID()
-            meal.items = ["Cake", "Burger"]
+
+        (1...5).forEach { _ in
+            var meal = Meal(context: viewContext)
+            PersistenceController.createMockup(meal: &meal)
             meal.date = Date.now
-            let demoLocation = Location(context: viewContext)
-            demoLocation.name = "Starbucks"
-            demoLocation.latitude = 41.032464900467325
-            demoLocation.longitude = 28.964352429812604
-            meal.selectedLocation = demoLocation
         }
-        for _ in 0..<5 {
-            let meal = Meal(context: viewContext)
-            meal.id = UUID()
-            meal.items = ["Cake", "Burger"]
-            let demoLocation = Location(context: viewContext)
-            demoLocation.name = "Starbucks"
-            demoLocation.latitude = 41.032464900467325
-            demoLocation.longitude = 28.964352429812604
-            meal.selectedLocation = demoLocation
-            meal.date = Date().addingTimeInterval(24*60*6)
+        (1...5).forEach { _ in
+            var meal = Meal(context: viewContext)
+            PersistenceController.createMockup(meal: &meal, date: .now.addingTimeInterval(24*60*6))
         }
 
         save(context: viewContext)
         return result
     }()
+
+    static func createMockup(meal: inout Meal, date: Date = .now) {
+        meal.id = UUID()
+        meal.items = ["Cake", "Burger"]
+        meal.date = date
+        let demoLocation = Location(context: PersistenceController.preview.container.viewContext)
+        demoLocation.name = "Coffee House"
+        (demoLocation.latitude, demoLocation.longitude) = (41.032464900467325, 28.964352429812604)
+        meal.selectedLocation = demoLocation
+    }
 
     let container: NSPersistentContainer
 
