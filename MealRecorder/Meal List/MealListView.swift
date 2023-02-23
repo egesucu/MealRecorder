@@ -45,7 +45,10 @@ struct MealListView: View {
                     .environment(\.managedObjectContext, context)
         })
     }
+}
 
+// MARK: - View Builders
+extension MealListView {
     @ViewBuilder
     func addButton() -> some View {
         VStack {
@@ -108,7 +111,8 @@ struct MealListView: View {
                     }
                 }
             }, label: {
-                Text(mealViewModel.filter.rawValue).bold()
+                Text(mealViewModel.filter.rawValue)
+                    .bold()
 
             })
             .disabled(mealViewModel.filteredMeals.isEmpty)
