@@ -7,129 +7,122 @@
 
 import SwiftUI
 
-enum MealFilter: String, CaseIterable {
-    case all = "All"
-    case today = "Today"
-    case thisWeek = "Weekly"
-    case thisMonth = "Monthly"
-}
-
 struct MealListView: View {
 
     @Environment(\.managedObjectContext) var context
+    @StateObject var mealViewModel = MealListViewModel()
     @FetchRequest(entity: Meal.entity(),
-                  sortDescriptors: [
-                    NSSortDescriptor(keyPath: \Meal.date, ascending: false)],
+                  sortDescriptors: [.init(keyPath: \Meal.date, ascending: false)],
                   animation: .easeInOut)
     var meals: FetchedResults<Meal>
-    @State private var filteredMeals: [Meal] = []
-
-    @State private var showAddMeal = false
-    @State private var selection = Set<Meal>()
-    @State private var isEditMode: EditMode = .inactive
-    @State private var showMoreItems = false
-    @State private var filter: MealFilter = .all
-
-    let mealDataManager = MealDataManager.shared
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
-                Color(.systemGroupedBackground).ignoresSafeArea(.all)
+                Color(.systemGroupedBackground)
+                    .ignoresSafeArea(.all)
                 ZStack(alignment: .bottom) {
-                    VStack {
-                        showView()
-                    }
-                    VStack {
-                        Spacer()
-                        Button {
-                            showAddMeal.toggle()
-                        } label: {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.system(size: 50))
-                                .symbolRenderingMode(.palette)
-                                .foregroundStyle(Color(.systemGroupedBackground), .orange)
-                        }
-                    }
-
+                    showView()
+                    addButton()
                 }
             }
-
-            .toolbar {
-                Menu(content: {
-                    Picker("Destination", selection: $filter) {
-                        ForEach(MealFilter.allCases, id: \.self) {
-                            Text($0.rawValue)
-                        }
-                    }
-                }, label: {
-                    Text(filter.rawValue).bold()
-
-                })
-                .disabled(meals.count == 0)
-                EditButton()
-                    .disabled(meals.count == 0)
-            }
             .navigationTitle(Text("Meals"))
-            .sheet(isPresented: $showAddMeal, onDismiss: {
-                filterMeals()
-                }, content: {
-                    AddMealView(mealDataManager: mealDataManager)
-                        .environment(\.managedObjectContext, context)
-            })
 
         }
-        .background(Color(.systemGroupedBackground), ignoresSafeAreaEdges: .all)
-        .onAppear(perform: {
+        .onAppear {
+            mealViewModel.filterMeals(meals: meals)
+        }
+        .onChange(of: mealViewModel.filter ) { _ in
+            mealViewModel.filterMeals(meals: meals)
+        }
+        .toolbar(content: bottomToolbar)
+
+        .sheet(isPresented: $mealViewModel.showAddMeal, onDismiss: {
             context.refreshAllObjects()
-            filterMeals()
+            mealViewModel.filterMeals(meals: meals)
+            }, content: {
+                AddMealView(mealViewModel: mealViewModel)
+                    .environment(\.managedObjectContext, context)
         })
-        .onChange(of: filter, perform: { _ in
-            filterMeals()
-        })
-        .navigationViewStyle(.stack)
+    }
+
+    @ViewBuilder
+    func addButton() -> some View {
+        VStack {
+            Spacer()
+            Button {
+                mealViewModel.showAddMeal.toggle()
+            } label: {
+                Image(systemName: "plus.circle.fill")
+                    .font(.system(size: 50))
+                    .symbolRenderingMode(.palette)
+                    .foregroundStyle(Color(.systemGroupedBackground), .orange)
+            }
+        }
     }
 
     @ViewBuilder
     func showView() -> some View {
-        if filteredMeals.count == 0 {
-            VStack {
-                Spacer()
-                Text("No meal is added.")
-                    .bold()
-                Spacer()
-            }
-        } else {
-            List(selection: $selection) {
-                ForEach(filteredMeals) { meal in
-                    MealCell(meal: meal)
-                        .padding(.bottom, 10)
+        VStack {
+            if mealViewModel.filteredMeals.isEmpty {
+                VStack {
+                    Spacer()
+                    Text("No meal is added.")
+                        .bold()
+                    Spacer()
                 }
-                .onDelete(perform: deleteMeal)
-                .listRowBackground(Color.clear)
-                .listRowSeparatorTint(.clear)
-            }
-            .listStyle(.insetGrouped)
-            .refreshable {
-                context.refreshAllObjects()
-                filterMeals()
-            }
+            } else {
+                List(selection: $mealViewModel.selection) {
+                    ForEach(mealViewModel.filteredMeals, id: \.id) { meal in
+                        MealCell(meal: meal)
+                            .padding(.bottom, 10)
+                    }
+                    .onDelete(perform: deleteMeal(at:))
+                    .listRowBackground(Color.clear)
+                    .listRowSeparatorTint(.clear)
+                }
+                .listStyle(.insetGrouped)
+                .refreshable {
+                    context.refreshAllObjects()
+                    mealViewModel.filterMeals(meals: meals)
+                }
 
+            }
         }
     }
 
-    func filterMeals() {
-        filteredMeals = mealDataManager.filterMeals(meals: meals, filter: filter)
+    func deleteMeal(at offsets: IndexSet) {
+        for offset in offsets {
+            context.delete(meals[offset])
+        }
+        PersistenceController.save(context: context)
     }
 
-    func deleteMeal(at offsets: IndexSet) {
-        mealDataManager.deleteMeal(context: context, meals: filteredMeals, at: offsets)
-        filterMeals()
+    @ToolbarContentBuilder
+    func bottomToolbar() -> some ToolbarContent {
+        ToolbarItem(placement: .navigationBarTrailing) {
+            Menu(content: {
+                Picker("Destination", selection: $mealViewModel.filter) {
+                    ForEach(MealFilter.allCases, id: \.self) {
+                        Text($0.rawValue)
+                    }
+                }
+            }, label: {
+                Text(mealViewModel.filter.rawValue).bold()
+
+            })
+            .disabled(mealViewModel.filteredMeals.isEmpty)
+
+            EditButton()
+                .disabled(mealViewModel.filteredMeals.isEmpty)
+        }
     }
 }
 
 struct MealList_Previews: PreviewProvider {
     static var previews: some View {
-        MealListView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        let context = PersistenceController.preview.container.viewContext
+        return MealListView()
+            .environment(\.managedObjectContext, context)
     }
 }

@@ -25,11 +25,10 @@ struct AddMealView: View {
 
     @StateObject var addMealViewModel = AddMealViewModel()
     @StateObject var customAlertManager = CustomAlertManager()
+    @ObservedObject var mealViewModel: MealListViewModel
 
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var context
-
-    var mealDataManager: MealDataManager
 
     var body: some View {
 
@@ -145,7 +144,7 @@ struct AddMealView: View {
 
 extension AddMealView {
     func saveMeal() {
-        mealDataManager
+        mealViewModel
             .addMeal(items: addMealViewModel.meals, date: addMealViewModel.date,
                      selectedLocation: addMealViewModel.selectedLocation,
                      context: context,
@@ -157,7 +156,7 @@ extension AddMealView {
 struct AddMealView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            AddMealView(mealDataManager: .shared)
+            AddMealView(mealViewModel: MealListViewModel())
         }
     }
 }
