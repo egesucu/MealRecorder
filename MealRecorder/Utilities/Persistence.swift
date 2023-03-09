@@ -13,30 +13,11 @@ struct PersistenceController {
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-
-        (1...5).forEach { _ in
-            var meal = Meal(context: viewContext)
-            PersistenceController.createMockup(meal: &meal)
-            meal.date = Date.now
-        }
-        (1...5).forEach { _ in
-            var meal = Meal(context: viewContext)
-            PersistenceController.createMockup(meal: &meal, date: .now.addingTimeInterval(24*60*6))
-        }
+        let meals = Meal.createMockup(context: viewContext)
 
         save(context: viewContext)
         return result
     }()
-
-    static func createMockup(meal: inout Meal, date: Date = .now) {
-        meal.id = UUID()
-        meal.items = ["Cake", "Burger"]
-        meal.date = date
-        let demoLocation = Location(context: PersistenceController.preview.container.viewContext)
-        demoLocation.name = "Coffee House"
-        (demoLocation.latitude, demoLocation.longitude) = (41.032464900467325, 28.964352429812604)
-        meal.selectedLocation = demoLocation
-    }
 
     let container: NSPersistentContainer
 
@@ -58,5 +39,32 @@ struct PersistenceController {
         } catch let error {
             print(error.localizedDescription)
         }
+    }
+}
+
+extension Meal {
+    static func createMockup(context: NSManagedObjectContext) -> [Meal] {
+        var meals: [Meal] = []
+        (1...5).forEach { _ in
+            let randomInterval = Int.random(in: 1...500)
+            let meal = Meal.createMeal(context: context, date: .now.addingTimeInterval(CGFloat(randomInterval)))
+            meals.append(meal)
+        }
+        return meals
+    }
+
+    static func createMeal(context: NSManagedObjectContext, date: Date = .now) -> Meal {
+        let meal = Meal(context: context)
+        meal.id = UUID()
+        meal.mealType = [MealType.morning, MealType.lunch, MealType.snack, MealType.evening].randomElement() ?? .morning
+        meal.items = ["Cake", "Burger"]
+        meal.date = date
+        let demoLocation = Location(context: context)
+        demoLocation.name = "Coffee House"
+        let randomLatitude = Double.random(in: 41.02...41.032464900467325)
+        let randomLongitude = Double.random(in: 28.95...28.964352429812604)
+        (demoLocation.latitude, demoLocation.longitude) = (randomLatitude, randomLongitude)
+        meal.selectedLocation = demoLocation
+        return meal
     }
 }
