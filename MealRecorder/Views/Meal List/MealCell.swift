@@ -77,7 +77,7 @@ extension MealCell {
             }
         }
         .padding(.all)
-        .background(.white)
+        .background(Color(uiColor: .systemBackground))
         .cornerRadius(10)
     }
 
@@ -114,12 +114,8 @@ extension MealCell {
 
 struct MealCell_Previews: PreviewProvider {
     static var previews: some View {
-
-        var meal = Meal(context: PersistenceController.preview.container.viewContext)
-        PersistenceController.createMockup(meal: &meal)
-
         return Group {
-            MealCell(meal: meal)
+            MealCell(meal: Meal.createMeal(context: PersistenceController.preview.container.viewContext))
                 .frame(width: .infinity, height: 80, alignment: .center)
                 .padding()
                 .previewLayout(.sizeThatFits)
