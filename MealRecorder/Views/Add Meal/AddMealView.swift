@@ -43,31 +43,93 @@ struct AddMealView: View {
                     }
                 }
                 Section {
+                    DatePicker("Date", selection: $addMealViewModel.date)
+                    Toggle("Add Image?", isOn: $addMealViewModel.shouldAddImage)
+
+                    if addMealViewModel.shouldAddImage {
+                        Picker("Source Type", selection: $addMealViewModel.imageSourceType) {
+                            Text("Library")
+                                .tag(ImagesourceType.library)
+                            Text("Camera")
+                                .tag(ImagesourceType.camera)
+                        }
+                        .pickerStyle(.segmented)
+
+                        switch addMealViewModel.imageSourceType {
+                        case .library:
+                            PhotosPicker("Select Image", selection: $addMealViewModel.photosPickerItem, matching: .images, photoLibrary: .shared())
+                                .onChange(of: addMealViewModel.photosPickerItem) { newItem in
+                                    Task {
+                                        if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                                            addMealViewModel.selectedImageData = data
+                                            if let uiImage = UIImage(data: data) {
+                                                addMealViewModel.selectedImage = Image(uiImage: uiImage)
+                                            }
+                                        }
+                                    }
+                                }
+                        case .camera:
+                            Button {
+                                addMealViewModel.activeSheet = .camera
+                            } label: {
+                                Text("Take a photo")
+                            }
+                        }
+
+                        if let photo = addMealViewModel.imageFromPhoto {
+                            photo
+                                .resizable()
+                                .scaledToFit()
+                        } else if let image = addMealViewModel.selectedImage {
+                            image
+                                .resizable()
+                                .scaledToFit()
+                        }
+                    }
+
+                    Toggle("Add Location?", isOn: $addMealViewModel.shouldAddLocation)
+
+                    if addMealViewModel.shouldAddLocation {
+                        if let location = addMealViewModel.selectedLocation,
+                           let name = location.item.name {
+                            HStack {
+                                Text("Location")
+                                    .bold()
+                                Spacer()
+                                Text(name)
+                            }
+                        }
+                    }
+                } header: {
+                    Text("Details")
+                }
+                if addMealViewModel.shouldAddLocation {
                     HStack {
-                        Text("Meal Location")
+                        Spacer()
                         Button {
                             addMealViewModel.activeSheet = .location
                         } label: {
-                            Image(systemName: "mappin.circle.fill")
+                            Label("Add Location", systemImage: "mappin.circle.fill")
+                                .symbolRenderingMode(.monochrome)
+                                .foregroundColor(.white)
                         }
-                        if let location = addMealViewModel.selectedLocation,
-                           let name = location.item.name {
-                            Text(name)
-                        } else {
-                            Spacer()
-                        }
+                        .buttonStyle(.borderedProminent)
+                        Spacer()
                     }
-                    DatePicker("Date", selection: $addMealViewModel.date)
-                } header: {
-                    Text("Details")
+                    .listRowBackground(Color.clear)
                 }
             }
             .navigationTitle(Text("Add Meal"))
             .toolbar(content: bottomToolbar)
         }
         .sheet(item: $addMealViewModel.activeSheet, content: { item in
-            if item == .location {
+            switch item {
+            case .location:
                 SearchLocationView(addMealViewModel: addMealViewModel)
+            case .camera:
+                CameraView(imageFromPhoto: $addMealViewModel.imageFromPhoto,
+                           takenPhotoData: $addMealViewModel.takenPhotoData,
+                           errorText: $addMealViewModel.errorText)
             }
         })
         .customAlert(manager: customAlertManager, content: alertContent, buttons: alertButtons())

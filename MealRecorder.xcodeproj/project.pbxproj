@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9D19391529C5F062002F9C38 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D19391429C5F062002F9C38 /* CameraView.swift */; };
 		9D1E5AF929A256510067DFA1 /* AlertKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9D1E5AF829A256510067DFA1 /* AlertKit */; };
 		9D3F632829A26D8A00C00DAD /* MealType+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3F632729A26D8A00C00DAD /* MealType+Extensions.swift */; };
 		9D471C92271C751A002641E9 /* MealListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D471C91271C751A002641E9 /* MealListView.swift */; };
@@ -34,6 +35,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9D19391429C5F062002F9C38 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		9D3F632729A26D8A00C00DAD /* MealType+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MealType+Extensions.swift"; sourceTree = "<group>"; };
 		9D471C91271C751A002641E9 /* MealListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealListView.swift; sourceTree = "<group>"; };
 		9D471C93271C8054002641E9 /* MealCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealCell.swift; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 				9DD7039E293B8EDF00F766DB /* SearchLocationView.swift */,
 				9D471C95271C8468002641E9 /* AddMealView.swift */,
 				9D904DF62967742000D6A2AF /* MealItemListView.swift */,
+				9D19391429C5F062002F9C38 /* CameraView.swift */,
 			);
 			path = "Add Meal";
 			sourceTree = "<group>";
@@ -282,7 +285,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nexport PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nexport PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint --fix\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -298,6 +301,7 @@
 				9D88309528F1D6D300320F98 /* CreditsView.swift in Sources */,
 				9D57C06129A7AB420037E3F3 /* ActiveSheets.swift in Sources */,
 				9D471C94271C8054002641E9 /* MealCell.swift in Sources */,
+				9D19391529C5F062002F9C38 /* CameraView.swift in Sources */,
 				9DD8CD1A271AEFBF00FCF1ED /* MealRecorder.xcdatamodeld in Sources */,
 				9D7C862C2997EC76009FD311 /* AddMealViewModel.swift in Sources */,
 				9D904DF72967742000D6A2AF /* MealItemListView.swift in Sources */,
