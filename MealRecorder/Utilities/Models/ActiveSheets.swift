@@ -9,6 +9,7 @@ import Foundation
 
 enum ActiveSheets: Identifiable {
     case location
+    case camera
 
     var id: Int {
         hashValue

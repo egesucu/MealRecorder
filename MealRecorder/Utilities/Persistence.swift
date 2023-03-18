@@ -6,6 +6,7 @@
 //
 
 import CoreData
+import UIKit
 
 struct PersistenceController {
     static let shared = PersistenceController()
@@ -58,6 +59,7 @@ extension Meal {
         meal.id = UUID()
         meal.mealType = [MealType.morning, MealType.lunch, MealType.snack, MealType.evening].randomElement() ?? .morning
         meal.items = ["Cake", "Burger"]
+        meal.image = UIImage(imageLiteralResourceName: "no-meal-photo").jpegData(compressionQuality: 0.8)
         meal.date = date
         let demoLocation = Location(context: context)
         demoLocation.name = "Coffee House"

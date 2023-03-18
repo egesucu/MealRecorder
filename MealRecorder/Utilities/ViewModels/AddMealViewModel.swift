@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import PhotosUI
 
 class AddMealViewModel: ObservableObject {
 
@@ -17,6 +18,15 @@ class AddMealViewModel: ObservableObject {
     @Published var customAlertText = ""
     @Published var activeSheet: ActiveSheets?
     @Published var mealType: MealType = .snack
+    @Published var shouldAddLocation = false
+    @Published var shouldAddImage = false
+    @Published var imageSourceType: ImagesourceType = .library
+    @Published var photosPickerItem: PhotosPickerItem?
+    @Published var selectedImageData: Data?
+    @Published var selectedImage: Image?
+    @Published var imageFromPhoto: Image?
+    @Published var takenPhotoData: Data?
+    @Published var errorText: String?
 
     func updateLocation(location: MapItem) {
         self.selectedLocation = location
@@ -25,10 +35,18 @@ class AddMealViewModel: ObservableObject {
     func saveMeal(model: MealListViewModel,
                   context: NSManagedObjectContext,
                   action: () -> Void) {
+
+        var imageData: Data?
+        if let takenPhotoData {
+            imageData = takenPhotoData
+        } else if let selectedImageData {
+            imageData = selectedImageData
+        }
         model.addMeal(items: meals, date: date,
                      selectedLocation: selectedLocation,
                      context: context,
-                     type: mealType)
+                     type: mealType,
+        imageData: imageData)
             action()
     }
 
@@ -36,4 +54,8 @@ class AddMealViewModel: ObservableObject {
         meals.append(customAlertText)
         customAlertText = ""
     }
+}
+
+enum ImagesourceType: Hashable {
+    case library, camera
 }
