@@ -40,7 +40,8 @@ class MealListViewModel: ObservableObject {
     func addMeal(items: [String], date: Date,
                  selectedLocation: MapItem?,
                  context: NSManagedObjectContext,
-                 type: MealType) {
+                 type: MealType,
+                 imageData: Data?) {
         let meal = Meal(context: context)
         meal.id = UUID()
         meal.items = items
@@ -52,6 +53,9 @@ class MealListViewModel: ObservableObject {
             location.latitude = selectedLocation.item.placemark.coordinate.latitude
             location.longitude = selectedLocation.item.placemark.coordinate.longitude
             meal.selectedLocation = location
+        }
+        if let imageData {
+            meal.image = imageData
         }
         PersistenceController.save(context: context)
     }

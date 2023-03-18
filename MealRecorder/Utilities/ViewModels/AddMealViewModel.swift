@@ -35,10 +35,18 @@ class AddMealViewModel: ObservableObject {
     func saveMeal(model: MealListViewModel,
                   context: NSManagedObjectContext,
                   action: () -> Void) {
+
+        var imageData: Data?
+        if let takenPhotoData {
+            imageData = takenPhotoData
+        } else if let selectedImageData {
+            imageData = selectedImageData
+        }
         model.addMeal(items: meals, date: date,
                      selectedLocation: selectedLocation,
                      context: context,
-                     type: mealType)
+                     type: mealType,
+        imageData: imageData)
             action()
     }
 

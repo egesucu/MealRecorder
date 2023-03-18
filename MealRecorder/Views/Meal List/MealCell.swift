@@ -14,6 +14,8 @@ struct MealCell: View {
     @State private var locationCoordination = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     @State private var showError = false
     @State private var alertMessage = ""
+    @State private var shouldShowImage = false
+
     let locationSpan = MKCoordinateSpan(latitudeDelta: 0.0005, longitudeDelta: 0.0005)
     var meal: Meal
 
@@ -30,6 +32,7 @@ struct MealCell: View {
                     .font(.title)
                     .multilineTextAlignment(.center)
                 mealCellItemsView()
+                    .padding([.leading, .trailing], 10)
                 if let date = meal.date {
                     mealCellDateLabelView(date: date)
                 }
@@ -37,6 +40,17 @@ struct MealCell: View {
         }
         .alert(isPresented: $showError, content: showGenericError)
         .onAppear(perform: updateLocation)
+        .sheet(isPresented: $shouldShowImage) {
+            if let data = meal.image,
+            let uiImage = UIImage(data: data) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFit()
+                    .cornerRadius(20)
+                    .shadow(radius: 8)
+                    .padding(.all)
+            }
+        }
     }
 
     func updateLocation() {
@@ -57,6 +71,10 @@ struct MealCell: View {
         }
     }
 
+    func showImage() {
+        shouldShowImage.toggle()
+    }
+
 }
 
 // MARK: - View Builders
@@ -72,6 +90,7 @@ extension MealCell {
                     HStack {
                         Label(item, systemImage: "largecircle.fill.circle")
                             .padding(.bottom, 3)
+                        Spacer()
                     }
                 }
             }
@@ -83,17 +102,26 @@ extension MealCell {
 
     @ViewBuilder
     func mealCellLocationView(location: Location) -> some View {
-        Map(
-            coordinateRegion: $locationRegion,
-            interactionModes: [], annotationItems: [location],
-            annotationContent: { _ in
-                MapMarker(coordinate: locationCoordination)
-
-            })
-        .onChange(of: locationRegion.center.latitude, perform: { _ in updateLocation()})
+        HStack(spacing: 0) {
+            Map(
+                coordinateRegion: $locationRegion,
+                interactionModes: [], annotationItems: [location],
+                annotationContent: { _ in
+                    MapMarker(coordinate: locationCoordination)
+                })
+            .onChange(of: locationRegion.center.latitude, perform: { _ in updateLocation()})
+            .onTapGesture(perform: openLocationInMaps)
+            if let data = meal.image,
+            let uiImage = UIImage(data: data) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFit()
+                    .onTapGesture(perform: showImage)
+            }
+        }
         .frame(height: 110)
         .cornerRadius(10, corners: [.topLeft, .topRight])
-        .onTapGesture(perform: openLocationInMaps)
+
     }
 
     @ViewBuilder
